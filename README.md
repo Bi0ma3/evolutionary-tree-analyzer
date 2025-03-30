@@ -1,4 +1,4 @@
-# This repository is not yet operational. Say tuned!
+# This repository is not yet operational. Stay tuned!
 
 # 🌿 Evolutionary Tree Analyzer  
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
