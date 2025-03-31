@@ -22,7 +22,7 @@ def build_parsimony_tree(aligned_fasta, output_newick="output/parsimony_tree.new
     Phylo.write(tree, output_newick, "newick")
     print(f"Parsimony-like tree saved to: {output_newick}")
 
-    def build_likelihood_tree(aligned_fasta, output_newick="output/ml_tree.newick"):
+def build_likelihood_tree(aligned_fasta, output_newick="output/ml_tree.newick"):
     """
     Builds a simple ML-like tree (UPGMA using identity) and saves it in Newick format.
     """
