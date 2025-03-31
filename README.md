@@ -1,25 +1,23 @@
-# This repository is not yet operational. Stay tuned!
-
 # 🌿 Evolutionary Tree Analyzer  
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
 ---
 
 ## 🔍 Overview  
-The Evolutionary Tree Analyzer is a Python-based tool designed for **educators, students, and researchers** in bioinformatics and evolutionary biology. It parses DNA sequences in **FASTA format**, aligns them, and constructs **phylogenetic trees** using **parsimony** and **maximum likelihood** approaches. It also includes visualizations and method comparisons for educational or analytical use.
+The Evolutionary Tree Analyzer is a Python-based pipeline designed for **educators, students, and researchers** in bioinformatics and evolutionary biology. It parses DNA sequences in **FASTA format**, aligns them using MUSCLE, and constructs **phylogenetic trees** using both **parsimony** and **maximum likelihood–style** methods. Output trees are visualized and saved as images for classroom or research use.
 
 ---
 
 ## 🎯 Features  
 - ✅ Upload and validate a FASTA file of DNA sequences  
-- ✅ Perform **multiple sequence alignment** using MUSCLE  
-- ✅ Build trees using:
-  - **Parsimony** (character-based)
-  - **Maximum Likelihood** (model-based)
-- ✅ Visualize phylogenetic trees using **ete3** or **Plotly**
-- ✅ Compare methods side-by-side with annotations
-- ✅ (Stretch) Generate PDF/HTML reports
-- ✅ (Stretch) Interactive Streamlit app  
+- ✅ Align sequences using **MUSCLE**  
+- ✅ Build phylogenetic trees using:
+  - **Parsimony** (character-based method)
+  - **Maximum Likelihood–style** (distance-based UPGMA using identity matrix)  
+- ✅ Visualize trees using **Biopython’s Phylo module**  
+- ✅ Automatically export `.png` tree images  
+- ✅ Modular, readable Python code for students and instructors  
+- ✅ Built to scale in classroom settings
 
 ---
 
@@ -76,10 +74,9 @@ jupyter notebook notebooks/tree_builder.ipynb
 
 Core Python libraries used:
 - `biopython` – parsing FASTA, alignment tools
-- `ete3` – tree visualization
-- `matplotlib` / `plotly` – optional visualization
+- `matplotlib` – optional display for save images
 - `subprocess` – run external tools like MUSCLE
-- `pandas`, `numpy` – data processing
+- `importlib.util` – dynamic loading of modular scripts
 
 To install all:
 ```bash
@@ -91,12 +88,15 @@ pip install -r requirements.txt
 ## 🧪 Example Use Case
 
 1. Drop your `.fasta` file into the `data/` folder.  
-2. Run the notebook or script to:
-   - Align sequences
+2. Run 'notebooks/tree_builder.ipynb'
+3. The notebook will:
+   - Align sequences using MUSCLE
    - Build two trees (parsimony, ML)
-   - Visualize them with branch support and leaf labels
-   - Compare tree structures and discuss findings  
-3. Export results to `output/tree_images/` and (optionally) generate a report.
+   - Render and safe images to `output/tree_images/`
+Perfect for:
+   - Classroom demos
+   - Independent student exploration
+   - Curriculum development
 
 ---
 
@@ -105,13 +105,13 @@ pip install -r requirements.txt
 - High school and college biology classrooms  
 - Evolution/bioinformatics labs  
 - Personal learning and demo projects  
-- Teachers Pay Teachers educational bundles  
+- Supplementing Teachers Pay Teachers Pipeline Bio Curriculum   
 
 ---
 
 ## 🧰 Future Plans
 
-- [ ] Add Streamlit interface  
+- [ ] Interactive Streamlit UI 
 - [ ] Enable drag-and-drop FASTA upload  
 - [ ] Add support for bootstrap analysis  
 - [ ] Export PDF/HTML reports  
