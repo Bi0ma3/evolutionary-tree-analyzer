@@ -1,0 +1,29 @@
+Folder PATH listing for volume Windows
+Volume serial number is 20F7-1B3A
+C:.
+¦   .gitignore
+¦   LICENSE
+¦   README.md
+¦   repo_structure.txt
+¦   requirements.txt
+¦   
++---data
+¦       example_sequences.fasta
+¦       test
+¦       
++---notebooks
+¦       tree_builder.ipynb
+¦       
++---output
+¦   ¦   aligned_sequences.fasta
+¦   ¦   
+¦   +---tree_images
++---src
+    ¦   align_sequences.py
+    ¦   build_tree.py
+    ¦   fasta_parser.py
+    ¦   visualize_tree.py
+    ¦   
+    +---__pycache__
+            align_sequences.cpython-311.pyc
+            
