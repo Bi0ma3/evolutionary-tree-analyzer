@@ -28,6 +28,7 @@ evolutionary-tree-analyzer/
 │
 ├── data/                    # Sample FASTA files
 │   └── example_sequences.fasta  
+│   └── example_large.fa  
 │
 ├── notebooks/               # Jupyter notebooks
 │   └── tree_builder.ipynb  
@@ -62,6 +63,8 @@ pip install -r requirements.txt
 ```
 
 **Note**: You must have `MUSCLE` installed and accessible from your system's PATH for alignment.
+⚠️ For large FASTA files (e.g., >50kb or >100 sequences), the alignment step may crash due to memory limits in Python/Jupyter.
+    👉 Instead, run MUSCLE manually from Git Bash or CMD - instruction below.
 
 ### 3. Run the main notebook
 ```bash
@@ -82,6 +85,39 @@ To install all:
 ```bash
 pip install -r requirements.txt
 ```
+
+## ⚙️ MUSCLE Alignment Notes (Updated for 2025)
+This tool uses MUSCLE to align DNA sequences before building trees.
+
+⚠️ As of 2025:
+   - MUSCLE v3.8.31 is no longer officially available or installable via conda or mamba.
+   - MUSCLE v5+ often crashes on large files (segfaults due to memory limits).
+   - Windows users especially may encounter issues.
+
+✅ Recommended Setup (Manual MUSCLE Alignment)
+1. Download MUSCLE v5.3 for Windows
+→ From the official site:
+https://drive5.com/muscle/downloads.htm
+
+2. Place the downloaded executable here (or adjust the path in your code):
+C:\Program Files\muscle\muscle.exe
+
+3. If alignment crashes inside the notebook, use the fallback batch file:
+Run this from Git Bash or Command Prompt:
+align_manual.bat
+
+This will:
+   - Align your FASTA file
+   - Save the result to:
+      output/aligned_sequences.fasta
+
+4. Then reopen the notebook and skip the alignment step.
+Go directly to tree construction.
+
+🧠 Tips for Large Input Files
+   - Use smaller test files to debug your workflow
+   - Trim sequences or split large FASTA files into smaller sets
+   - Avoid running MUSCLE v5 inside Python if memory use exceeds ~16GB
 
 ---
 
@@ -132,6 +168,17 @@ Perfect for:
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+## 🧾 Citations & Attributions
+
+This project uses the MUSCLE alignment tool developed by Robert C. Edgar.
+
+> Edgar, R.C. (2004) MUSCLE: multiple sequence alignment with high accuracy and high throughput. *Nucleic Acids Research*, 32(5):1792–1797.  
+> [http://www.drive5.com/muscle](http://www.drive5.com/muscle)
+
+Please cite this work if you use the alignment functionality in your research or publications.
 
 ---
 
