@@ -62,9 +62,19 @@ cd evolutionary-tree-analyzer
 pip install -r requirements.txt
 ```
 
-**Note**: You must have `MUSCLE` installed and accessible from your system's PATH for alignment.
-⚠️ For large FASTA files (e.g., >50kb or >100 sequences), the alignment step may crash due to memory limits in Python/Jupyter.
-    👉 Instead, run MUSCLE manually from Git Bash or CMD - instruction below.
+### ⚙️ MUSCLE Alignment Notes
+
+This project uses [MUSCLE](https://drive5.com/muscle/downloads_v3.htm) v3.8.31 to align DNA sequences.
+
+- For small files, alignment runs automatically in Python
+- For large files, use the included batch file to run MUSCLE manually from the command line.
+
+#### You must have `MUSCLE` installed and accessible from your system's PATH for alignment.
+
+MUSCLE citation:
+Edgar, R.C. (2004) Nucleic Acids Res 32(5):1792–1797. http://www.drive5.com/muscle
+
+✨Please cite this work if you use the alignment functionality in your research or publications.
 
 ### 3. Run the main notebook
 ```bash
@@ -86,13 +96,6 @@ To install all:
 pip install -r requirements.txt
 ```
 
-## ⚙️ MUSCLE Alignment Notes (Updated for 2025)
-This tool uses MUSCLE to align DNA sequences before building trees.
-
-⚠️ As of 2025:
-   - MUSCLE v3.8.31 is no longer officially available or installable via conda or mamba.
-   - MUSCLE v5+ often crashes on large files (segfaults due to memory limits).
-   - Windows users especially may encounter issues.
 
 ✅ Recommended Setup (Manual MUSCLE Alignment)
 1. Download MUSCLE v5.3 for Windows
