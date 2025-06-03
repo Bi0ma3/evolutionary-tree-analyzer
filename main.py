@@ -30,154 +30,166 @@ app_colors = {
     "dark":  {"background": "#121212", "text": "white"}
 }
 
-# ─── Begin UPDATED layout block (with watermark + loading spinner) ───────────
+
+# ─── Begin UPDATED layout block (flex + watermark + loading spinner) ─────────
 app.layout = html.Div(
-    id="page-container",
+    id="page‐container",
+    # Make the entire page a flex‐column so we can “push” the footer to the bottom
     style={
-        # Watermark background:
-        "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
-        "backgroundSize":  "cover",
-        "backgroundPosition": "center",
-        "backgroundRepeat":  "no-repeat",
-        # Fallback background color:
-        "backgroundColor": app_colors["light"]["background"],
+        "display": "flex",
+        "flexDirection": "column",
         "minHeight": "100vh",
-        "padding":   "20px"
     },
     children=[
+        # ────────────── Main “content” wrapper ─────────────────────────────────
+        html.Div(
+            # Let this section expand to fill everything above the footer
+            style={"flex": "1 0 auto"},
+            children=[
 
-        # ─── 1) Top welcome banner ───────────────────────────────────────────
-        dbc.Row(
-            dbc.Col(
-                html.Div(
-                    [
-                        html.H4("Welcome to SimplePhylo", style={"marginBottom": "0.25rem"}),
-                        html.P(
-                            "This tool aligns your FASTA sequences (best with 10 or fewer at a time) "
-                            "and builds parsimony/ML-style trees.  Please be patient—alignments can take a minute or two.",
-                            style={"marginTop": "0", "fontSize": "0.95rem"}
-                        )
-                    ],
-                    style={
-                        "backgroundColor": "#D4BEF5",  # very light lavender
-                        "padding": "10px 20px",
-                        "borderRadius": "5px",
-                        "marginBottom": "20px",
-                        # Slight transparency so watermark peeks through:
-                        "opacity": "0.95"
-                    }
-                ),
-                width=10, className="mx-auto"
-            )
-        ),
-
-
-        # ─── 2) Main container (header + upload + button + output) ───────────
-        dbc.Container(
-            [
-                # ─── 2a) Header (changed to “SimplePhylo”) ────────────────────
+                # ─── 1) Top welcome banner ─────────────────────────────────────────
                 dbc.Row(
                     dbc.Col(
-                        html.H1(
+                        html.Div(
                             [
-                                # (Optional) Tiny logo by your title—uncomment if you want it:
-                                # html.Img(
-                                #     src=app.get_asset_url("PB_logo_noback_solid.png"),
-                                #     style={
-                                #         "height": "36px",
-                                #         "verticalAlign": "middle",
-                                #         "marginRight": "10px"
-                                #     }
-                                # ),
-                                html.Span("SimplePhylo", style={"verticalAlign": "middle"})
+                                html.H4("Welcome to SimplePhylo", style={"marginBottom": "0.25rem"}),
+                                html.P(
+                                    "This tool aligns your FASTA sequences (best with 10 or fewer at a time) "
+                                    "and builds parsimony/ML‐style trees.  Please be patient—alignments can take a minute or two ✌️💜",
+                                    style={"marginTop": "0", "fontSize": "0.95rem", "verticalAlign": "middle"}
+                                )
                             ],
-                            className="text-center my-4",
-                            style={"fontWeight": "600"}
-                        )
+                            style={
+                                "backgroundColor": "#D4BEF5",   # very light lavender
+                                "padding": "10px 20px",
+                                "borderRadius": "5px",
+                                "marginBottom": "20px",
+                                "opacity": "0.95"  # let a bit of the watermark show through
+                            }
+                        ),
+                        width=10, className="mx-auto"
                     )
                 ),
 
 
-                # ─── 2b) Upload & analyze area ────────────────────────────────
-                dbc.Row(
-                    dbc.Col(
-                        [
-                            # Theme toggle (unchanged)
-                            dcc.RadioItems(
-                                id="theme-toggle",
-                                options=[
-                                    {"label": "🌞 Light", "value": "light"},
-                                    {"label": "🌙 Dark",  "value": "dark"}
-                                ],
-                                value="light",
-                                inline=True,
-                                labelStyle={"marginRight": "10px"},
-                                style={"textAlign": "center", "marginBottom": "20px"}
-                            ),
+                # ─── 2) Main container (header + upload + button + output) ─────────
+                dbc.Container(
+                    # Apply the watermark (with fallback) at this level, then override in theme callback
+                    style={
+                        "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
+                        "backgroundSize":  "cover",
+                        "backgroundPosition": "center",
+                        "backgroundRepeat":  "no-repeat",
+                        # fallback backgroundColor set below in the theme callback
+                    },
+                    children=[
 
-                            # Upload box (background tinted light purple)
-                            dcc.Upload(
-                                id="upload-fasta",
-                                children=html.Div(
+                        # ─── 2a) Header (changed to “SimplePhylo”) ─────────────────
+                        dbc.Row(
+                            dbc.Col(
+                                html.H1(
                                     [
-                                        "📁 Drag and Drop or ",
-                                        html.A("Select a FASTA File")
-                                    ]
-                                ),
-                                style={
-                                    "width": "100%",
-                                    "height": "80px",
-                                    "lineHeight": "60px",
-                                    "borderWidth": "1px",
-                                    "borderStyle": "dashed",
-                                    "borderRadius": "5px",
-                                    "textAlign": "center",
-                                    "margin": "10px 0",
-                                    "backgroundColor": "#F3E5F5",  # light lavender
-                                },
-                                multiple=False
-                            ),
-
-                            # Show file-status message
-                            html.Div(id="file-status"),
-
-                            # Analyze button
-                            dbc.Button(
-                                "Analyze",
-                                id="analyze-button",
-                                color="success",
-                                className="mt-3"
-                            ),
-
-                            # ─── Wrap the output in a dcc.Loading spinner ───────
-                            dcc.Loading(
-                                id="loading-analysis",
-                                type="circle",      # “circle” spinner
-                                children=html.Div(
-                                    id="analysis-output",
-                                    className="mt-4"
+                                        # If you want the tiny logo next to the text, uncomment:
+                                        # html.Img(
+                                        #     src=app.get_asset_url("PB_logo_noback_solid.png"),
+                                        #     style={
+                                        #         "height": "36px",
+                                        #         "marginRight": "10px",
+                                        #         "verticalAlign": "middle"
+                                        #     }
+                                        # ),
+                                        html.Span("🌿SimplePhylo", style={"verticalAlign": "middle"})
+                                    ],
+                                    className="text-center my-4",
+                                    style={"fontWeight": "600"}
                                 )
                             )
-                        ],
-                        width=8, className="mx-auto"
-                    )
-                ),
+                        ),
 
-                # ─── 2c) Tooltips (unchanged) ─────────────────────────────────
-                dbc.Tooltip(
-                    "Upload a DNA or protein FASTA file. Sequences will be aligned for tree building.",
-                    target="upload-fasta", placement="bottom"
-                ),
-                dbc.Tooltip(
-                    "Run alignment and generate both trees.",
-                    target="analyze-button", placement="right"
-                ),
 
+                        # ─── 2b) Upload & analyze area ─────────────────────────────
+                        dbc.Row(
+                            dbc.Col(
+                                [
+
+                                    # Theme toggle (unchanged)
+                                    dcc.RadioItems(
+                                        id="theme-toggle",
+                                        options=[
+                                            {"label": "🌞 Light", "value": "light"},
+                                            {"label": "🌙 Dark",  "value": "dark"}
+                                        ],
+                                        value="light",
+                                        inline=True,
+                                        labelStyle={"marginRight": "10px"},
+                                        style={"textAlign": "center", "marginBottom": "20px"}
+                                    ),
+
+                                    # Upload box (background tinted light purple)
+                                    dcc.Upload(
+                                        id="upload-fasta",
+                                        children=html.Div(
+                                            [
+                                                "📁 Drag and Drop or ",
+                                                html.A("Select a FASTA File")
+                                            ]
+                                        ),
+                                        style={
+                                            "width": "100%",
+                                            "height": "80px",
+                                            "lineHeight": "60px",
+                                            "borderWidth": "1px",
+                                            "borderStyle": "dashed",
+                                            "borderRadius": "5px",
+                                            "textAlign": "center",
+                                            "margin": "10px 0",
+                                            "backgroundColor": "#F3E5F5",  # light lavender
+                                        },
+                                        multiple=False
+                                    ),
+
+                                    # Show file‐status message
+                                    html.Div(id="file-status"),
+
+                                    # Analyze button
+                                    dbc.Button(
+                                        "Analyze",
+                                        id="analyze-button",
+                                        color="success",
+                                        className="mt-3"
+                                    ),
+
+                                    # ─── Wrap the output in a dcc.Loading spinner ────────
+                                    dcc.Loading(
+                                        id="loading-analysis",
+                                        type="circle",      # “circle” spinner
+                                        children=html.Div(
+                                            id="analysis-output",
+                                            className="mt-4"
+                                        )
+                                    )
+                                ],
+                                width=8, className="mx-auto"
+                            )
+                        ),
+
+                        # ─── 2c) Tooltips (unchanged) ─────────────────────────────
+                        dbc.Tooltip(
+                            "Upload a DNA or protein FASTA file. Sequences will be aligned for tree building.",
+                            target="upload-fasta", placement="bottom"
+                        ),
+                        dbc.Tooltip(
+                            "Run alignment and generate both trees.",
+                            target="analyze-button", placement="right"
+                        )
+
+                    ]
+                )
             ]
         ),
 
 
-        # ─── 3) Footer with clickable links and logo ─────────────────────
+        # ─── 3) Footer with clickable links and logo ───────────────────────────
         html.Footer(
             dbc.Container(
                 dbc.Row(
@@ -242,7 +254,8 @@ app.layout = html.Div(
                     )
                 ),
                 fluid=True,
-                style={"backgroundColor": "#4B0082"}  # same purple as before
+                # Push footer to bottom with marginTop: auto:
+                style={"backgroundColor": "#4B0082", "marginTop": "auto"}
             )
         )
     ]
@@ -350,11 +363,14 @@ def run_analysis(n_clicks, contents, filename):
 def update_theme(theme):
     # Base styles for both light & dark, including watermark:
     base = {
+        "display": "flex",
+        "flexDirection": "column",
+        "minHeight": "100vh",
+        # Watermark background:
         "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
         "backgroundSize":  "cover",
         "backgroundPosition": "center",
         "backgroundRepeat":  "no-repeat",
-        "minHeight": "100vh",
         "padding":   "20px"
     }
 
@@ -362,13 +378,13 @@ def update_theme(theme):
         return {
             **base,
             "backgroundColor": app_colors["light"]["background"],
-            # No extra brightness reduction
+            # No extra filter in light mode
         }
     else:
         return {
             **base,
             "backgroundColor": app_colors["dark"]["background"],
-            # Dim the watermark in dark mode so it doesn't overwhelm text
+            # Dim the watermark in dark mode so text remains legible
             "filter": "brightness(0.4)"
         }
 
