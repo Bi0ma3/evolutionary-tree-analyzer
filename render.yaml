@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: evolutionary-tree-analyzer
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+
+# Note: Render uses this file to understand how to build and run the app.
