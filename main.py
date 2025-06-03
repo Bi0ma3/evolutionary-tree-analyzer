@@ -30,12 +30,24 @@ app_colors = {
     "dark":  {"background": "#121212", "text": "white"}
 }
 
-# === Begin NEW layout block ===
+
+# === Begin UPDATED layout block (with background watermark) ===
 app.layout = html.Div(
     id="page-container",
+    # NOTE: We set a background image here.  It will be behind all child elements.
+    style={
+        "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
+        "backgroundSize":  "cover",       # stretch/scale to fill
+        "backgroundPosition": "center",    # center the watermark
+        "backgroundRepeat":  "no-repeat",  # do not tile
+        # We give a fallback backgroundColor in case the image fails to load
+        "backgroundColor": app_colors["light"]["background"],
+        "minHeight": "100vh",
+        "padding": "20px"
+    },
     children=[
 
-        # 1) Top welcome banner (unchanged)
+        # 1) Top welcome banner
         dbc.Row(
             dbc.Col(
                 html.Div(
@@ -43,15 +55,18 @@ app.layout = html.Div(
                         html.H4("Welcome to SimplePhylo", style={"marginBottom": "0.25rem"}),
                         html.P(
                             "This tool aligns your FASTA sequences (best with 10 or fewer at a time) "
-                            "and builds parsimony/ML‐style trees. Please be patient—alignments can take a minute or two.",
+                            "and builds parsimony/ML‐style trees. "
+                            "Please be patient—alignments can take a minute or two.",
                             style={"marginTop": "0", "fontSize": "0.95rem"}
-                        ),
+                        )
                     ],
                     style={
                         "backgroundColor": "#D4BEF5",  # very light lavender
                         "padding": "10px 20px",
                         "borderRadius": "5px",
-                        "marginBottom": "20px"
+                        "marginBottom": "20px",
+                        # Optionally, give it partial opacity so the watermark still shows behind:
+                        "opacity": "0.95"
                     }
                 ),
                 width=10, className="mx-auto"
@@ -61,14 +76,21 @@ app.layout = html.Div(
         # 2) Main container (header + upload + button + output)
         dbc.Container(
             [
-                # 2a) Header
+                # 2a) Header (logo + title)
                 dbc.Row(
                     dbc.Col(
                         html.H1(
-                            "SimplePhylo",
+                            [
+                                # If you still want the small “icon” version of your pipeline logo, you could uncomment this:
+                                # html.Img(
+                                #     src=app.get_asset_url("PB_logo_noback_solid.png"),
+                                #     style={"height": "36px", "verticalAlign": "middle", "marginRight": "10px"}
+                                # ),
+                                html.Span("SimplePhylo", style={"verticalAlign": "middle"})
+                            ],
                             className="text-center my-4",
                             style={"fontWeight": "600"}
-                        ),
+                        )
                     )
                 ),
 
@@ -89,11 +111,14 @@ app.layout = html.Div(
                                 style={"textAlign": "center", "marginBottom": "20px"}
                             ),
 
-                            # Upload box (light-purple background)
+                            # Upload box (background tinted light purple)
                             dcc.Upload(
                                 id="upload-fasta",
                                 children=html.Div(
-                                    ["📁 Drag and Drop or ", html.A("Select a FASTA File")]
+                                    [
+                                        "📁 Drag and Drop or ",
+                                        html.A("Select a FASTA File")
+                                    ]
                                 ),
                                 style={
                                     "width": "100%",
@@ -109,7 +134,7 @@ app.layout = html.Div(
                                 multiple=False
                             ),
 
-                            # Show file-status message
+                            # Show file‐status message
                             html.Div(id="file-status"),
 
                             # Analyze button
@@ -120,15 +145,8 @@ app.layout = html.Div(
                                 className="mt-3"
                             ),
 
-                            # ─── UPDATED ───
-                            # Wrap 'analysis-output' inside a Loading spinner
-                            dcc.Loading(
-                                id="loading-analysis",
-                                type="circle",
-                                children=html.Div(id="analysis-output", className="mt-4"),
-                            ),
-                            # ───────────────
-
+                            # Where analysis‐output (trees, messages, images) appear
+                            html.Div(id="analysis-output", className="mt-4")
                         ],
                         width=8, className="mx-auto"
                     )
@@ -146,30 +164,54 @@ app.layout = html.Div(
             ]
         ),
 
-        # 3) Footer with clickable links and logo (unchanged)
+        # 3) Footer with clickable links and logo
         html.Footer(
             dbc.Container(
                 dbc.Row(
                     dbc.Col(
                         html.Div(
                             [
-                                html.Span("Created by: ", style={"color": "white", "marginRight": "8px", "fontSize": "0.9rem"}),
+                                # “Created by:” text
+                                html.Span(
+                                    "Created by:",
+                                    style={"color": "white", "marginRight": "8px", "fontSize": "0.9rem"}
+                                ),
+
+                                # A small “watermark” or icon could go here if you like.  For example, if you wanted a tiny version:
                                 html.A(
                                     html.Img(
                                         src=app.get_asset_url("PB_logo_noback_solid.png"),
-                                        style={"height": "24px", "marginRight": "5px", "verticalAlign": "middle"}
+                                        style={
+                                            "height": "24px",
+                                            "marginRight": "5px",
+                                            "verticalAlign": "middle"
+                                        }
                                     ),
                                     href="https://www.linkedin.com/in/mae-w",
                                     target="_blank",
                                     title="Mae Warner on LinkedIn"
                                 ),
+
+                                # Mae Warner → LinkedIn
                                 html.A(
                                     "Mae Warner",
                                     href="https://www.linkedin.com/in/mae-w",
                                     target="_blank",
-                                    style={"color": "white", "marginRight": "12px", "verticalAlign": "middle", "fontSize": "0.9rem"}
+                                    style={
+                                        "color": "white",
+                                        "marginRight": "12px",
+                                        "verticalAlign": "middle",
+                                        "fontSize": "0.9rem"
+                                    }
                                 ),
-                                html.Span("🤍", style={"marginRight": "12px", "fontSize": "1rem", "verticalAlign": "middle"}),
+
+                                # Heart separator
+                                html.Span(
+                                    "🤍",
+                                    style={"marginRight": "12px", "fontSize": "1rem", "verticalAlign": "middle"}
+                                ),
+
+                                # Pipeline Bio → TPT store
                                 html.A(
                                     "Pipeline Bio",
                                     href="https://www.teacherspayteachers.com/Store/Pipeline-Bio",
@@ -177,17 +219,22 @@ app.layout = html.Div(
                                     style={"color": "white", "fontSize": "0.9rem", "verticalAlign": "middle"}
                                 )
                             ],
-                            style={"display": "flex", "justifyContent": "center", "alignItems": "center", "padding": "10px 0"}
+                            style={
+                                "display": "flex",
+                                "justifyContent": "center",
+                                "alignItems": "center",
+                                "padding": "10px 0"
+                            }
                         )
                     )
                 ),
                 fluid=True,
-                style={"backgroundColor": "#4B0082"}
+                style={"backgroundColor": "#4B0082"}  # same purple as before
             )
         )
     ]
 )
-# === End NEW layout block ===
+# === End UPDATED layout block ===
 
 
 # === Callbacks for upload & analysis (UNCHANGED aside from returning updated layout) ===
@@ -282,18 +329,37 @@ def run_analysis(n_clicks, contents, filename):
     return "⚠️ No file uploaded."
 
 
-# Theme switching (unchanged)
+# Theme switching (adjust background color + optional brightness filter in dark mode)
 @app.callback(
     Output("page-container", "style"),
     Input("theme-toggle", "value")
 )
 def update_theme(theme):
-    return {
-        "backgroundColor": app_colors[theme]["background"],
-        "color":           app_colors[theme]["text"],
-        "minHeight":       "100vh",
-        "padding":         "20px"
+    # Base styles for both light & dark:
+    base = {
+        "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
+        "backgroundSize":  "cover",
+        "backgroundPosition": "center",
+        "backgroundRepeat":  "no-repeat",
+        "minHeight": "100vh",
+        "padding":   "20px"
     }
+
+    if theme == "light":
+        # In light mode, we may want the watermark to be more visible:
+        return {
+            **base,
+            "backgroundColor": app_colors["light"]["background"],
+            # no extra brightness reduction
+        }
+    else:
+        # In dark mode, dim the watermark so it doesn’t overwhelm the text:
+        return {
+            **base,
+            "backgroundColor": app_colors["dark"]["background"],
+            # apply a CSS filter to dim the image by ~60%
+            "filter": "brightness(0.4)"
+        }
 
 
 # Run server
