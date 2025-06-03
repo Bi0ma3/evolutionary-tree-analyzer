@@ -8,46 +8,45 @@ from handle_upload import parse_uploaded_fasta, save_fasta_and_align
 from src.build_tree import build_parsimony_tree, build_likelihood_tree
 from src.visualize_tree import visualize_tree
 
-# Set up Dash & Flask server
+# ─── Set up Dash & Flask server ─────────────────────────────────────────────
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 server = app.server
 
-# Serve static images
+# Serve static output images
 @server.route("/output/tree_images/<path:filename>")
 def serve_tree_image(filename):
     return send_from_directory("output/tree_images", filename)
 
-# File paths (unchanged)
+# ─── File paths (unchanged) ─────────────────────────────────────────────────
 ALIGNED_FASTA = "output/aligned_sequences.fasta"
 TREE_FILE_PARS  = "output/parsimony_tree.newick"
 TREE_IMG_PARS   = "output/tree_images/parsimony_tree.png"
 TREE_FILE_ML    = "output/ml_tree.newick"
 TREE_IMG_ML     = "output/tree_images/ml_tree.png"
 
-# Theme definitions (unchanged)
+# ─── Theme definitions (unchanged) ──────────────────────────────────────────
 app_colors = {
     "light": {"background": "white",   "text": "black"},
     "dark":  {"background": "#121212", "text": "white"}
 }
 
-
-# === Begin UPDATED layout block (with background watermark) ===
+# ─── Begin UPDATED layout block (with watermark + loading spinner) ───────────
 app.layout = html.Div(
     id="page-container",
-    # NOTE: We set a background image here.  It will be behind all child elements.
     style={
+        # Watermark background:
         "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
-        "backgroundSize":  "cover",       # stretch/scale to fill
-        "backgroundPosition": "center",    # center the watermark
-        "backgroundRepeat":  "no-repeat",  # do not tile
-        # We give a fallback backgroundColor in case the image fails to load
+        "backgroundSize":  "cover",
+        "backgroundPosition": "center",
+        "backgroundRepeat":  "no-repeat",
+        # Fallback background color:
         "backgroundColor": app_colors["light"]["background"],
         "minHeight": "100vh",
-        "padding": "20px"
+        "padding":   "20px"
     },
     children=[
 
-        # 1) Top welcome banner
+        # ─── 1) Top welcome banner ───────────────────────────────────────────
         dbc.Row(
             dbc.Col(
                 html.Div(
@@ -55,8 +54,7 @@ app.layout = html.Div(
                         html.H4("Welcome to SimplePhylo", style={"marginBottom": "0.25rem"}),
                         html.P(
                             "This tool aligns your FASTA sequences (best with 10 or fewer at a time) "
-                            "and builds parsimony/ML‐style trees. "
-                            "Please be patient—alignments can take a minute or two.",
+                            "and builds parsimony/ML-style trees.  Please be patient—alignments can take a minute or two.",
                             style={"marginTop": "0", "fontSize": "0.95rem"}
                         )
                     ],
@@ -65,7 +63,7 @@ app.layout = html.Div(
                         "padding": "10px 20px",
                         "borderRadius": "5px",
                         "marginBottom": "20px",
-                        # Optionally, give it partial opacity so the watermark still shows behind:
+                        # Slight transparency so watermark peeks through:
                         "opacity": "0.95"
                     }
                 ),
@@ -73,18 +71,23 @@ app.layout = html.Div(
             )
         ),
 
-        # 2) Main container (header + upload + button + output)
+
+        # ─── 2) Main container (header + upload + button + output) ───────────
         dbc.Container(
             [
-                # 2a) Header (logo + title)
+                # ─── 2a) Header (changed to “SimplePhylo”) ────────────────────
                 dbc.Row(
                     dbc.Col(
                         html.H1(
                             [
-                                # If you still want the small “icon” version of your pipeline logo, you could uncomment this:
+                                # (Optional) Tiny logo by your title—uncomment if you want it:
                                 # html.Img(
                                 #     src=app.get_asset_url("PB_logo_noback_solid.png"),
-                                #     style={"height": "36px", "verticalAlign": "middle", "marginRight": "10px"}
+                                #     style={
+                                #         "height": "36px",
+                                #         "verticalAlign": "middle",
+                                #         "marginRight": "10px"
+                                #     }
                                 # ),
                                 html.Span("SimplePhylo", style={"verticalAlign": "middle"})
                             ],
@@ -94,7 +97,8 @@ app.layout = html.Div(
                     )
                 ),
 
-                # 2b) Upload & analyze area
+
+                # ─── 2b) Upload & analyze area ────────────────────────────────
                 dbc.Row(
                     dbc.Col(
                         [
@@ -134,7 +138,7 @@ app.layout = html.Div(
                                 multiple=False
                             ),
 
-                            # Show file‐status message
+                            # Show file-status message
                             html.Div(id="file-status"),
 
                             # Analyze button
@@ -145,14 +149,21 @@ app.layout = html.Div(
                                 className="mt-3"
                             ),
 
-                            # Where analysis‐output (trees, messages, images) appear
-                            html.Div(id="analysis-output", className="mt-4")
+                            # ─── Wrap the output in a dcc.Loading spinner ───────
+                            dcc.Loading(
+                                id="loading-analysis",
+                                type="circle",      # “circle” spinner
+                                children=html.Div(
+                                    id="analysis-output",
+                                    className="mt-4"
+                                )
+                            )
                         ],
                         width=8, className="mx-auto"
                     )
                 ),
 
-                # 2c) Tooltips (unchanged)
+                # ─── 2c) Tooltips (unchanged) ─────────────────────────────────
                 dbc.Tooltip(
                     "Upload a DNA or protein FASTA file. Sequences will be aligned for tree building.",
                     target="upload-fasta", placement="bottom"
@@ -161,10 +172,12 @@ app.layout = html.Div(
                     "Run alignment and generate both trees.",
                     target="analyze-button", placement="right"
                 ),
+
             ]
         ),
 
-        # 3) Footer with clickable links and logo
+
+        # ─── 3) Footer with clickable links and logo ─────────────────────
         html.Footer(
             dbc.Container(
                 dbc.Row(
@@ -177,7 +190,7 @@ app.layout = html.Div(
                                     style={"color": "white", "marginRight": "8px", "fontSize": "0.9rem"}
                                 ),
 
-                                # A small “watermark” or icon could go here if you like.  For example, if you wanted a tiny version:
+                                # Tiny logo → LinkedIn
                                 html.A(
                                     html.Img(
                                         src=app.get_asset_url("PB_logo_noback_solid.png"),
@@ -192,7 +205,7 @@ app.layout = html.Div(
                                     title="Mae Warner on LinkedIn"
                                 ),
 
-                                # Mae Warner → LinkedIn
+                                # “Mae Warner” → LinkedIn
                                 html.A(
                                     "Mae Warner",
                                     href="https://www.linkedin.com/in/mae-w",
@@ -211,7 +224,7 @@ app.layout = html.Div(
                                     style={"marginRight": "12px", "fontSize": "1rem", "verticalAlign": "middle"}
                                 ),
 
-                                # Pipeline Bio → TPT store
+                                # “Pipeline Bio” → Teachers Pay Teachers
                                 html.A(
                                     "Pipeline Bio",
                                     href="https://www.teacherspayteachers.com/Store/Pipeline-Bio",
@@ -234,10 +247,10 @@ app.layout = html.Div(
         )
     ]
 )
-# === End UPDATED layout block ===
+# ─── End UPDATED layout block ────────────────────────────────────────────────
 
 
-# === Callbacks for upload & analysis (UNCHANGED aside from returning updated layout) ===
+# ─── Callbacks for upload & analysis (UNCHANGED aside from loading spinner) ───
 
 # Upload feedback
 @app.callback(
@@ -335,7 +348,7 @@ def run_analysis(n_clicks, contents, filename):
     Input("theme-toggle", "value")
 )
 def update_theme(theme):
-    # Base styles for both light & dark:
+    # Base styles for both light & dark, including watermark:
     base = {
         "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
         "backgroundSize":  "cover",
@@ -346,23 +359,21 @@ def update_theme(theme):
     }
 
     if theme == "light":
-        # In light mode, we may want the watermark to be more visible:
         return {
             **base,
             "backgroundColor": app_colors["light"]["background"],
-            # no extra brightness reduction
+            # No extra brightness reduction
         }
     else:
-        # In dark mode, dim the watermark so it doesn’t overwhelm the text:
         return {
             **base,
             "backgroundColor": app_colors["dark"]["background"],
-            # apply a CSS filter to dim the image by ~60%
+            # Dim the watermark in dark mode so it doesn't overwhelm text
             "filter": "brightness(0.4)"
         }
 
 
-# Run server
+# ─── Run server ───────────────────────────────────────────────────────────────
 def main():
     app.run(debug=False)
 
