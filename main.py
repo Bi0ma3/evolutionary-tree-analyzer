@@ -35,7 +35,7 @@ app.layout = html.Div(
     id="page-container",
     children=[
 
-        # 1) Top welcome banner
+        # 1) Top welcome banner (unchanged)
         dbc.Row(
             dbc.Col(
                 html.Div(
@@ -43,10 +43,9 @@ app.layout = html.Div(
                         html.H4("Welcome to SimplePhylo", style={"marginBottom": "0.25rem"}),
                         html.P(
                             "This tool aligns your FASTA sequences (best with 10 or fewer at a time) "
-                            "and builds parsimony/ML‐style trees. "
-                            "Please be patient—alignments can take a minute or two.",
+                            "and builds parsimony/ML‐style trees. Please be patient—alignments can take a minute or two.",
                             style={"marginTop": "0", "fontSize": "0.95rem"}
-                        )
+                        ),
                     ],
                     style={
                         "backgroundColor": "#D4BEF5",  # very light lavender
@@ -62,11 +61,11 @@ app.layout = html.Div(
         # 2) Main container (header + upload + button + output)
         dbc.Container(
             [
-                # 2a) Header (changed to “SimplePhylo”)
+                # 2a) Header
                 dbc.Row(
                     dbc.Col(
                         html.H1(
-                            "🧬 SimplePhylo",
+                            "SimplePhylo",
                             className="text-center my-4",
                             style={"fontWeight": "600"}
                         ),
@@ -90,14 +89,11 @@ app.layout = html.Div(
                                 style={"textAlign": "center", "marginBottom": "20px"}
                             ),
 
-                            # Upload box (background tinted light purple)
+                            # Upload box (light-purple background)
                             dcc.Upload(
                                 id="upload-fasta",
                                 children=html.Div(
-                                    [
-                                        "📁 Drag and Drop or ",
-                                        html.A("Select a FASTA File")
-                                    ]
+                                    ["📁 Drag and Drop or ", html.A("Select a FASTA File")]
                                 ),
                                 style={
                                     "width": "100%",
@@ -113,7 +109,7 @@ app.layout = html.Div(
                                 multiple=False
                             ),
 
-                            # Show file‐status message
+                            # Show file-status message
                             html.Div(id="file-status"),
 
                             # Analyze button
@@ -124,8 +120,15 @@ app.layout = html.Div(
                                 className="mt-3"
                             ),
 
-                            # Where analysis‐output (trees, messages, images) appear
-                            html.Div(id="analysis-output", className="mt-4")
+                            # ─── UPDATED ───
+                            # Wrap 'analysis-output' inside a Loading spinner
+                            dcc.Loading(
+                                id="loading-analysis",
+                                type="circle",
+                                children=html.Div(id="analysis-output", className="mt-4"),
+                            ),
+                            # ───────────────
+
                         ],
                         width=8, className="mx-auto"
                     )
@@ -143,34 +146,43 @@ app.layout = html.Div(
             ]
         ),
 
-        # 3) Footer with clickable links
+        # 3) Footer with clickable links and logo (unchanged)
         html.Footer(
             dbc.Container(
                 dbc.Row(
                     dbc.Col(
                         html.Div(
                             [
-                                # “Mae Warner” → LinkedIn
+                                html.Span("Created by: ", style={"color": "white", "marginRight": "8px", "fontSize": "0.9rem"}),
+                                html.A(
+                                    html.Img(
+                                        src=app.get_asset_url("PB_logo_noback_solid.png"),
+                                        style={"height": "24px", "marginRight": "5px", "verticalAlign": "middle"}
+                                    ),
+                                    href="https://www.linkedin.com/in/mae-w",
+                                    target="_blank",
+                                    title="Mae Warner on LinkedIn"
+                                ),
                                 html.A(
                                     "Mae Warner",
                                     href="https://www.linkedin.com/in/mae-w",
                                     target="_blank",
-                                    style={"color": "white", "marginRight": "15px"}
+                                    style={"color": "white", "marginRight": "12px", "verticalAlign": "middle", "fontSize": "0.9rem"}
                                 ),
-                                # “Pipeline Bio” → TPT store
+                                html.Span("🤍", style={"marginRight": "12px", "fontSize": "1rem", "verticalAlign": "middle"}),
                                 html.A(
                                     "Pipeline Bio",
                                     href="https://www.teacherspayteachers.com/Store/Pipeline-Bio",
                                     target="_blank",
-                                    style={"color": "white"}
+                                    style={"color": "white", "fontSize": "0.9rem", "verticalAlign": "middle"}
                                 )
                             ],
-                            style={"display": "flex", "justifyContent": "center", "alignItems": "center"}
+                            style={"display": "flex", "justifyContent": "center", "alignItems": "center", "padding": "10px 0"}
                         )
                     )
                 ),
                 fluid=True,
-                style={"backgroundColor": "#4B0082", "padding": "15px 0"}
+                style={"backgroundColor": "#4B0082"}
             )
         )
     ]
