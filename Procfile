@@ -1,3 +1,3 @@
-web: gunicorn main:app
+web: gunicorn main:server
 # Note: Used for deployment on Render or other platforms.
 # Runs the Dash app via Gunicorn (WSGI server): app.py must expose `app = dash.Dash(...)`
