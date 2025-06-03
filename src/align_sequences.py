@@ -1,23 +1,23 @@
-import os
-import shutil
-import subprocess
+import os, subprocess
 
 def align_sequences(input_fasta, output_fasta):
     """
     Align sequences using MUSCLE and save to output_fasta.
-    Automatically detects MUSCLE path for portability.
+    Automatically uses local ./bin/muscle for Render compatibility.
     """
-    muscle_path = shutil.which("muscle")
+    # Point to the unzipped binary we just committed
+    muscle_path = os.path.join(".", "bin", "muscle")
 
-    if not muscle_path:
-        raise FileNotFoundError("MUSCLE executable not found in system PATH. Make sure it is installed.")
+    if not os.path.isfile(muscle_path):
+        raise FileNotFoundError(f"MUSCLE binary not found at {muscle_path}")
 
-    if os.path.getsize(input_fasta) > 10 * 1024 * 1024:  # 10MB
+    # Warn if huge FASTA
+    if os.path.getsize(input_fasta) > 10 * 1024 * 1024:  # 10 MB size check
         print(f"⚠️ Warning: {input_fasta} is large. Consider aligning manually.")
         return
 
+    # Build a list invocation—**no shell=True**
     command = [muscle_path, "-align", input_fasta, "-output", output_fasta]
-
     try:
         result = subprocess.run(
             command,
