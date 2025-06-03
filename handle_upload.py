@@ -22,9 +22,9 @@ def save_fasta_and_align(contents):
     with open(input_path, "wb") as f:
         f.write(decoded)
 
-    # Run MUSCLE (make sure this path matches your machine)
-    MUSCLE_PATH = r"C:\Program Files\muscle\muscle.exe"
-    cmd = [MUSCLE_PATH, "-in", input_path, "-out", output_path]
+    # Run MUSCLE 
+    muscle_path = os.path.join(".", "bin", "muscle")
+    cmd = [muscle_path, "-in", input_path, "-out", output_path]
 
     try:
         subprocess.run(cmd, check=True)

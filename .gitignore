@@ -26,3 +26,6 @@ Thumbs.db
 *.aln
 *.dnd
 *.log
+
+# Not necessary for Render
+align_manual.bat
