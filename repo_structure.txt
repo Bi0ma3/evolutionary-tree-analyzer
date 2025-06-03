@@ -1,29 +1,36 @@
 Folder PATH listing for volume Windows
 Volume serial number is 20F7-1B3A
-C:.
-�   .gitignore
-�   LICENSE
-�   README.md
-�   repo_structure.txt
-�   requirements.txt
-�   
-+---data
-�       example_sequences.fasta
-�       test
-�       
-+---notebooks
-�       tree_builder.ipynb
-�       
-+---output
-�   �   aligned_sequences.fasta
-�   �   
-�   +---tree_images
-+---src
-    �   align_sequences.py
-    �   build_tree.py
-    �   fasta_parser.py
-    �   visualize_tree.py
-    �   
-    +---__pycache__
-            align_sequences.cpython-311.pyc
-            
+evolutionary-tree-analyzer/
+│
+├── app.py                       # Dash app interface
+├── align_manual.bat             # Manual MUSCLE alignment (Windows)
+├── requirements.txt             # Python dependencies
+├── LICENSE
+├── README.md
+├── repo_structure.txt
+│
+├── assets/
+│   └── PB_logo_noback_solid.png
+│
+├── data/
+│   ├── example_sequences.fasta
+│   └── example_large.fa
+│
+├── notebooks/
+│   └── tree_builder.ipynb
+│
+├── output/
+│   ├── aligned_sequences.fasta
+│   ├── ml_tree.newick
+│   ├── parsimony_tree.newick
+│   └── tree_images/
+│       ├── ml_tree.png
+│       └── parsimony_tree.png
+│
+└── src/
+    ├── __pycache__/
+    ├── fasta_parser.py
+    ├── align_sequences.py
+    ├── build_tree.py
+    └── visualize_tree.py
+
