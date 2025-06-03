@@ -4,47 +4,53 @@
 ---
 
 ## 🔍 Overview  
-The Evolutionary Tree Analyzer is a Python-based pipeline designed for **educators, students, and researchers** in bioinformatics and evolutionary biology. It parses DNA sequences in **FASTA format**, aligns them using MUSCLE, and constructs **phylogenetic trees** using both **parsimony** and **maximum likelihood–style** methods. Output trees are visualized and saved as images for classroom or research use.
+The Evolutionary Tree Analyzer is a Python-based web app and notebook toolkit designed for **educators, students, and researchers** in bioinformatics and evolutionary biology.
+
+It parses DNA sequences in **FASTA format**, aligns them using **MUSCLE**, and constructs **phylogenetic trees** using both **parsimony** and **maximum likelihood–style** methods. Tree outputs are visualized and exported as `.png` images for teaching, presentations, or research use.
 
 ---
 
 ## 🎯 Features  
-- ✅ Upload and validate a FASTA file of DNA sequences  
-- ✅ Align sequences using **MUSCLE**  
-- ✅ Build phylogenetic trees using:
-  - **Parsimony** (character-based method)
-  - **Maximum Likelihood–style** (distance-based UPGMA using identity matrix)  
-- ✅ Visualize trees using **Biopython’s Phylo module**  
-- ✅ Automatically export `.png` tree images  
-- ✅ Modular, readable Python code for students and instructors  
-- ✅ Built to scale in classroom settings
+- ✅ Upload and validate DNA FASTA files  
+- ✅ Align sequences using **MUSCLE v3.8.31**  
+- ✅ Generate phylogenetic trees via:
+  - **Parsimony** (UPGMA clustering)
+  - **ML-style** (distance-based using identity matrix)  
+- ✅ Visualize trees with **Biopython’s Phylo module**  
+- ✅ Export `.png` images automatically  
+- ✅ Modular, classroom-friendly Python structure  
+- ✅ Built for scalability in teaching and student exploration  
 
 ---
 
 ## 📁 Project Structure
 
+
 ```
 evolutionary-tree-analyzer/
 │
-├── data/                    # Sample FASTA files
-│   └── example_sequences.fasta  
-│   └── example_large.fa  
+├── assets/ # Logo and static UI assets
+├── data/ # Input FASTA files
+│ ├── example_sequences.fasta
+│ └── example_large.fa
 │
-├── notebooks/               # Jupyter notebooks
-│   └── tree_builder.ipynb  
+├── notebooks/ # Jupyter notebook version
+│ └── tree_builder.ipynb
 │
-├── output/                  # Generated tree images & outputs
-│   └── tree_images/
+├── output/ # Alignment files and rendered tree images
+│ └── tree_images/
 │
-├── src/                     # Python modules
-│   ├── fasta_parser.py  
-│   ├── align_sequences.py  
-│   ├── build_tree.py  
-│   └── visualize_tree.py  
+├── src/ # Core Python logic
+│ ├── fasta_parser.py
+│ ├── align_sequences.py
+│ ├── build_tree.py
+│ └── visualize_tree.py
 │
-├── requirements.txt         # Python dependencies
-├── LICENSE                  # MIT License (or your choice)
-└── README.md                # You're reading it!
+├── app.py # Dash web app interface
+├── align_manual.bat # Batch file for manual MUSCLE alignment (Windows)
+├── requirements.txt # Python dependencies
+├── LICENSE # MIT License
+└── README.md # You are here!
 ```
 
 ---
@@ -67,20 +73,23 @@ pip install -r requirements.txt
 This project uses [MUSCLE](https://drive5.com/muscle/downloads_v3.htm) v3.8.31 to align DNA sequences.
 
 - For small files, alignment runs automatically in Python
-- For large files, use the included batch file to run MUSCLE manually from the command line.
+- For large files, use the batch script: align_manual.bat
 
 #### You must have `MUSCLE` installed and accessible from your system's PATH for alignment.
+💡 Ensure the muscle.exe binary is placed in:
+C:\Program Files\muscle\muscle.exe
+Or edit the .bat file to reflect the correct path.
 
 MUSCLE citation:
 Edgar, R.C. (2004) Nucleic Acids Res 32(5):1792–1797. http://www.drive5.com/muscle
 
 ✨Please cite this work if you use the alignment functionality in your research or publications.
 
-### 3. Run the main notebook
+### 3. Launch the App (Web Interface)
 ```bash
-jupyter notebook notebooks/tree_builder.ipynb
+python app.py 
 ```
-
+Alternatively, you can run notebooks/tree_builder.ipynb in Jupyter Notebook.
 ---
 
 ## 📦 Dependencies
@@ -90,68 +99,44 @@ Core Python libraries used:
 - `matplotlib` – optional display for save images
 - `subprocess` – run external tools like MUSCLE
 - `importlib.util` – dynamic loading of modular scripts
+- `dash` + `dash-bootstrap-components` – dashboard
+- `tkinter` – for local image rendering in the notebook
 
-To install all:
-```bash
-pip install -r requirements.txt
-```
+---
 
-
-✅ Recommended Setup (Manual MUSCLE Alignment)
-1. Download MUSCLE v5.3 for Windows
-→ From the official site:
-https://drive5.com/muscle/downloads.htm
-
-2. Place the downloaded executable here (or adjust the path in your code):
-C:\Program Files\muscle\muscle.exe
-
-3. If alignment crashes inside the notebook, use the fallback batch file:
-Run this from Git Bash or Command Prompt:
-align_manual.bat
-
-This will:
-   - Align your FASTA file
-   - Save the result to:
-      output/aligned_sequences.fasta
-
-4. Then reopen the notebook and skip the alignment step.
-Go directly to tree construction.
-
-🧠 Tips for Large Input Files
+## 🧠 Tips for Large Input Files
    - Use smaller test files to debug your workflow
    - Trim sequences or split large FASTA files into smaller sets
    - Avoid running MUSCLE v5 inside Python if memory use exceeds ~16GB
 
 ---
 
-## 🧪 Example Use Case
+## 🧪 Example Workflow
+1. Drop your .fasta file into the data/ folder
+2. Launch the app or notebook
+3. You’ll get:
+  - A multiple sequence alignment (FASTA)
+  - Two phylogenetic trees (Parsimony & ML-style)
+  - PNG files saved in output/tree_images/
 
-1. Drop your `.fasta` file into the `data/` folder.  
-2. Run 'notebooks/tree_builder.ipynb'
-3. The notebook will:
-   - Align sequences using MUSCLE
-   - Build two trees (parsimony, ML)
-   - Render and safe images to `output/tree_images/`
 Perfect for:
-   - Classroom demos
-   - Independent student exploration
-   - Curriculum development
+🧬 Biology class demonstrations
+🧪 Research prototyping
+📚 Curriculum development
+💡 Student-led investigations
 
 ---
 
 ## 🎓 Ideal For
-
-- High school and college biology classrooms  
-- Evolution/bioinformatics labs  
-- Personal learning and demo projects  
-- Supplementing Teachers Pay Teachers Pipeline Bio Curriculum   
+- High school biology & AP Bio courses
+- Undergraduate bioinformatics/evolution units
+- Curriculum writers and lab instructors
+- Pipeline Bio resources  
 
 ---
 
 ## 🧰 Future Plans
-
-- [ ] Interactive Streamlit UI 
-- [ ] Enable drag-and-drop FASTA upload  
+  
 - [ ] Add support for bootstrap analysis  
 - [ ] Export PDF/HTML reports  
 - [ ] Add tree comparison metrics (e.g., RF distance)
