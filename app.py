@@ -183,5 +183,8 @@ def update_theme(theme):
     }
 
 # Launch app
+def main():
+    app.run(debug=False)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    main()
