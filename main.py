@@ -1,7 +1,7 @@
 import dash
 from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
-import os
+import os, shutil
 from flask import send_from_directory
 
 from handle_upload import parse_uploaded_fasta, save_fasta_and_align
@@ -17,45 +17,41 @@ server = app.server
 def serve_tree_image(filename):
     return send_from_directory("output/tree_images", filename)
 
-# ─── File paths (unchanged) ─────────────────────────────────────────────────
-ALIGNED_FASTA  = "output/aligned_sequences.fasta"
-TREE_FILE_PARS = "output/parsimony_tree.newick"
-TREE_IMG_PARS  = "output/tree_images/parsimony_tree.png"
-TREE_FILE_ML   = "output/ml_tree.newick"
-TREE_IMG_ML    = "output/tree_images/ml_tree.png"
+# ─── File paths ──────────────────────────────────────────────────────────────
+ALIGNED_FASTA = "output/aligned_sequences.fasta"
+TREE_FILE_PARS  = "output/parsimony_tree.newick"
+TREE_IMG_PARS   = "output/tree_images/parsimony_tree.png"
+TREE_FILE_ML    = "output/ml_tree.newick"
+TREE_IMG_ML     = "output/tree_images/ml_tree.png"
 
-# ─── Theme definitions (unchanged) ──────────────────────────────────────────
-app_colors = {
-    "light": {"background": "white",   "text": "black"},
-    "dark":  {"background": "#121212", "text": "white"}
-}
+# ─── Theme colors (we’ll now only use “light”) ───────────────────────────────
+LIGHT_BG = "white"
+LIGHT_TEXT = "black"
 
-
-# ─── Begin UPDATED layout block ─────────────────────────────────────────────
+# ─── Begin UPDATED layout block (no more Light/Dark toggle) ──────────────────
 app.layout = html.Div(
     id="page-container",
-    # Make the entire page a flex‐column so the footer can sit at the bottom.
-    # Also apply the watermark here so it covers 100% of the viewport:
+    # Make the entire page a flex-column so the footer can sit at the bottom
     style={
         "display": "flex",
         "flexDirection": "column",
         "minHeight": "100vh",
-
-        # ── WATERMARK APPLIED TO ENTIRE PAGE ───────────────────────
+        # Watermark background (always visible, dimmed if you like)
         "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
-        "backgroundSize":   "cover",          # stretch to fill
-        "backgroundPosition": "center",       # keep centered
+        "backgroundSize":  "cover",
+        "backgroundPosition": "center",
         "backgroundRepeat":  "no-repeat",
-        "padding": "20px"                      # same padding as before
+        "backgroundColor": LIGHT_BG,
+        "padding": "20px"
     },
     children=[
-
-        # ───────── Main content (will expand to push footer down) ───────
+        # ─── Main “content” wrapper ────────────────────────────────────────
         html.Div(
-            style={"flex": "1 0 auto"},  # this area grows
+            # Let this section expand to fill everything above the footer
+            style={"flex": "1 0 auto"},
             children=[
 
-                # ─── 1) Top welcome banner ────────────────────────────
+                # ─── 1) Top welcome banner ────────────────────────────────────
                 dbc.Row(
                     dbc.Col(
                         html.Div(
@@ -72,24 +68,23 @@ app.layout = html.Div(
                                 "padding": "10px 20px",
                                 "borderRadius": "5px",
                                 "marginBottom": "20px",
-                                "opacity": "0.95"               # let a bit of watermark peek through
+                                "opacity": "0.95"  # let a bit of the watermark show through
                             }
                         ),
                         width=10, className="mx-auto"
                     )
                 ),
 
-                # ─── 2) Main container (header + upload + button + output) ──
-                #      (No more watermark CSS here—it's now on the outer div)
+                # ─── 2) Main container (header + upload + button + output) ─────
                 dbc.Container(
                     children=[
 
-                        # ─── 2a) Header ──────────────────────────────────
+                        # ─── 2a) Header (“SimplePhylo”) ─────────────────────────
                         dbc.Row(
                             dbc.Col(
                                 html.H1(
                                     [
-                                        # If you still want the tiny logo to appear in the title:
+                                        # If you ever want the small logo next to the text, uncomment the lines below:
                                         # html.Img(
                                         #     src=app.get_asset_url("PB_logo_noback_solid.png"),
                                         #     style={
@@ -101,29 +96,16 @@ app.layout = html.Div(
                                         html.Span("🌿 SimplePhylo", style={"verticalAlign": "middle"})
                                     ],
                                     className="text-center my-4",
-                                    style={"fontWeight": "600"}
+                                    style={"fontWeight": "600", "color": LIGHT_TEXT}
                                 )
                             )
                         ),
 
-                        # ─── 2b) Upload & analyze area ────────────────────
+                        # ─── 2b) Upload & analyze area ─────────────────────────
                         dbc.Row(
                             dbc.Col(
                                 [
-                                    # Theme toggle
-                                    dcc.RadioItems(
-                                        id="theme-toggle",
-                                        options=[
-                                            {"label": "🌞 Light", "value": "light"},
-                                            {"label": "🌙 Dark",  "value": "dark"}
-                                        ],
-                                        value="light",
-                                        inline=True,
-                                        labelStyle={"marginRight": "10px"},
-                                        style={"textAlign": "center", "marginBottom": "20px"}
-                                    ),
-
-                                    # Upload box (light purple)
+                                    # Upload box (background tinted light purple)
                                     dcc.Upload(
                                         id="upload-fasta",
                                         children=html.Div(
@@ -141,12 +123,12 @@ app.layout = html.Div(
                                             "borderRadius": "5px",
                                             "textAlign": "center",
                                             "margin": "10px 0",
-                                            "backgroundColor": "#F3E5F5",
+                                            "backgroundColor": "#F3E5F5",  # light lavender
                                         },
                                         multiple=False
                                     ),
 
-                                    # File‐status text
+                                    # Show file‐status message
                                     html.Div(id="file-status"),
 
                                     # Analyze button
@@ -157,10 +139,10 @@ app.layout = html.Div(
                                         className="mt-3"
                                     ),
 
-                                    # ─── Wrap analysis‐output in a spinner ────────
+                                    # ─── Wrap the output in a dcc.Loading spinner ───
                                     dcc.Loading(
                                         id="loading-analysis",
-                                        type="circle",
+                                        type="circle",      # “circle” spinner
                                         children=html.Div(
                                             id="analysis-output",
                                             className="mt-4"
@@ -171,7 +153,7 @@ app.layout = html.Div(
                             )
                         ),
 
-                        # ─── 2c) Tooltips ─────────────────────────────────
+                        # ─── 2c) Tooltips ───────────────────────────────────────
                         dbc.Tooltip(
                             "Upload a DNA or protein FASTA file. Sequences will be aligned for tree building.",
                             target="upload-fasta", placement="bottom"
@@ -185,17 +167,20 @@ app.layout = html.Div(
             ]
         ),
 
-        # ─── 3) Footer with links and logo ────────────────────────────────────
+        # ─── 3) Footer with clickable links and logo ────────────────────────
         html.Footer(
             dbc.Container(
                 dbc.Row(
                     dbc.Col(
                         html.Div(
                             [
+                                # “Created by:” text
                                 html.Span(
                                     "Created by:",
                                     style={"color": "white", "marginRight": "8px", "fontSize": "0.9rem"}
                                 ),
+
+                                # Tiny logo → LinkedIn
                                 html.A(
                                     html.Img(
                                         src=app.get_asset_url("PB_logo_noback_solid.png"),
@@ -209,6 +194,8 @@ app.layout = html.Div(
                                     target="_blank",
                                     title="Mae Warner on LinkedIn"
                                 ),
+
+                                # “Mae Warner” → LinkedIn
                                 html.A(
                                     "Mae Warner",
                                     href="https://www.linkedin.com/in/mae-w",
@@ -220,10 +207,14 @@ app.layout = html.Div(
                                         "fontSize": "0.9rem"
                                     }
                                 ),
+
+                                # Heart separator
                                 html.Span(
                                     "🤍",
                                     style={"marginRight": "12px", "fontSize": "1rem", "verticalAlign": "middle"}
                                 ),
+
+                                # “Pipeline Bio” → Teachers Pay Teachers
                                 html.A(
                                     "Pipeline Bio",
                                     href="https://www.teacherspayteachers.com/Store/Pipeline-Bio",
@@ -241,7 +232,7 @@ app.layout = html.Div(
                     )
                 ),
                 fluid=True,
-                # Push footer to the bottom when content is short
+                # Push footer to bottom with "marginTop: auto"
                 style={"backgroundColor": "#4B0082", "marginTop": "auto"}
             )
         )
@@ -250,7 +241,9 @@ app.layout = html.Div(
 # ─── End UPDATED layout block ────────────────────────────────────────────────
 
 
-# ─── Callbacks for upload & analysis ─────────────────────────────────────────
+# ─── Callbacks for upload & analysis (UNCHANGED aside from loading spinner) ───
+
+# Upload feedback
 @app.callback(
     Output("file-status", "children"),
     Input("upload-fasta", "contents"),
@@ -262,6 +255,7 @@ def handle_upload(contents, filename):
     return ""
 
 
+# Tree analysis callback
 @app.callback(
     Output("analysis-output", "children"),
     Input("analyze-button", "n_clicks"),
@@ -298,53 +292,44 @@ def run_analysis(n_clicks, contents, filename):
 
             return html.Div(
                 [
-                    # First line of feedback
                     html.P(f"✅ Parsed {num_seqs} sequence(s). {align_message}"),
 
-                    # “What’s the difference?” box
                     html.Div(
                         [
-                            html.P(
-                                "🔍 What's the difference?",
-                                style={"fontWeight": "bold"}
-                            ),
-                            html.Ul(
+                            html.H5("Parsimony Tree"),
+                            html.H5("ML‐style Tree", style={"marginTop": "20px"}),
+                            html.Div(
                                 [
-                                    html.Li("Parsimony minimizes evolutionary changes; simple & fast."),
-                                    html.Li("ML-style reflects rates via UPGMA on identity-based distances.")
-                                ]
+                                    html.P(
+                                        "🔍 What's the difference?",
+                                        style={"fontWeight": "bold"}
+                                    ),
+                                    html.Ul(
+                                        [
+                                            html.Li("Parsimony minimizes evolutionary changes; simple & fast."),
+                                            html.Li("ML‐style reflects rates via UPGMA on identity‐based distances.")
+                                        ]
+                                    )
+                                ],
+                                style={
+                                    "backgroundColor": "#f8f9fa",
+                                    "border": "1px solid #ccc",
+                                    "borderRadius": "5px",
+                                    "padding": "10px",
+                                    "marginTop": "20px",
+                                    "fontSize": "0.9rem"
+                                }
                             )
-                        ],
-                        style={
-                            "backgroundColor": "#f8f9fa",
-                            "border": "1px solid #ccc",
-                            "borderRadius": "5px",
-                            "padding": "10px",
-                            "marginTop": "20px",
-                            "fontSize": "0.9rem"
-                        }
-                    ),
-
-                    # Parsimony Tree label + image
-                    html.Div(
-                        [
-                            html.H5("Parsimony Tree", style={"marginTop": "20px"}),
-                            html.Img(
-                                src="/output/tree_images/parsimony_tree.png",
-                                style={"maxWidth": "100%", "marginTop": "10px"}
-                            ),
                         ]
                     ),
 
-                    # ML-style Tree label + image
-                    html.Div(
-                        [
-                            html.H5("ML-style Tree", style={"marginTop": "20px"}),
-                            html.Img(
-                                src="/output/tree_images/ml_tree.png",
-                                style={"maxWidth": "100%", "marginTop": "10px"}
-                            ),
-                        ]
+                    html.Img(
+                        src="/output/tree_images/parsimony_tree.png",
+                        style={"maxWidth": "100%", "marginTop": "20px"}
+                    ),
+                    html.Img(
+                        src="/output/tree_images/ml_tree.png",
+                        style={"maxWidth": "100%", "marginTop": "20px"}
                     )
                 ]
             )
@@ -352,37 +337,6 @@ def run_analysis(n_clicks, contents, filename):
         except Exception as e:
             return f"❌ Error: {str(e)}"
     return "⚠️ No file uploaded."
-
-
-@app.callback(
-    Output("page-container", "style"),
-    Input("theme-toggle", "value")
-)
-def update_theme(theme):
-    # Base styles for both light & dark, including watermark:
-    base = {
-        "display": "flex",
-        "flexDirection": "column",
-        "minHeight": "100vh",
-        "backgroundImage": f"url('{app.get_asset_url('PB_logo_watermark.png')}')",
-        "backgroundSize":  "cover",
-        "backgroundPosition": "center",
-        "backgroundRepeat":  "no-repeat",
-        "padding":   "20px"
-    }
-
-    if theme == "light":
-        return {
-            **base,
-            "backgroundColor": app_colors["light"]["background"],
-            # no extra filter
-        }
-    else:
-        return {
-            **base,
-            "backgroundColor": app_colors["dark"]["background"],
-            "filter": "brightness(0.4)"
-        }
 
 
 # ─── Run server ───────────────────────────────────────────────────────────────
