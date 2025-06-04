@@ -298,44 +298,53 @@ def run_analysis(n_clicks, contents, filename):
 
             return html.Div(
                 [
+                    # First line of feedback
                     html.P(f"✅ Parsed {num_seqs} sequence(s). {align_message}"),
 
+                    # “What’s the difference?” box
                     html.Div(
                         [
-                            html.H5("Parsimony Tree"),
-                            html.H5("ML‐style Tree", style={"marginTop": "20px"}),
-                            html.Div(
+                            html.P(
+                                "🔍 What's the difference?",
+                                style={"fontWeight": "bold"}
+                            ),
+                            html.Ul(
                                 [
-                                    html.P(
-                                        "🔍 What's the difference?",
-                                        style={"fontWeight": "bold"}
-                                    ),
-                                    html.Ul(
-                                        [
-                                            html.Li("Parsimony minimizes evolutionary changes; simple & fast."),
-                                            html.Li("ML‐style reflects rates via UPGMA on identity‐based distances.")
-                                        ]
-                                    )
-                                ],
-                                style={
-                                    "backgroundColor": "#f8f9fa",
-                                    "border": "1px solid #ccc",
-                                    "borderRadius": "5px",
-                                    "padding": "10px",
-                                    "marginTop": "20px",
-                                    "fontSize": "0.9rem"
-                                }
+                                    html.Li("Parsimony minimizes evolutionary changes; simple & fast."),
+                                    html.Li("ML-style reflects rates via UPGMA on identity-based distances.")
+                                ]
                             )
+                        ],
+                        style={
+                            "backgroundColor": "#f8f9fa",
+                            "border": "1px solid #ccc",
+                            "borderRadius": "5px",
+                            "padding": "10px",
+                            "marginTop": "20px",
+                            "fontSize": "0.9rem"
+                        }
+                    ),
+
+                    # Parsimony Tree label + image
+                    html.Div(
+                        [
+                            html.H5("Parsimony Tree", style={"marginTop": "20px"}),
+                            html.Img(
+                                src="/output/tree_images/parsimony_tree.png",
+                                style={"maxWidth": "100%", "marginTop": "10px"}
+                            ),
                         ]
                     ),
 
-                    html.Img(
-                        src="/output/tree_images/parsimony_tree.png",
-                        style={"maxWidth": "100%", "marginTop": "20px"}
-                    ),
-                    html.Img(
-                        src="/output/tree_images/ml_tree.png",
-                        style={"maxWidth": "100%", "marginTop": "20px"}
+                    # ML-style Tree label + image
+                    html.Div(
+                        [
+                            html.H5("ML-style Tree", style={"marginTop": "20px"}),
+                            html.Img(
+                                src="/output/tree_images/ml_tree.png",
+                                style={"maxWidth": "100%", "marginTop": "10px"}
+                            ),
+                        ]
                     )
                 ]
             )
