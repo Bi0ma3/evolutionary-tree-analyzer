@@ -270,6 +270,7 @@ def run_analysis(n_clicks, contents, filename):
 
             align_message = save_fasta_and_align(contents)
 
+            # Build both trees:
             build_parsimony_tree(
                 os.path.abspath(ALIGNED_FASTA),
                 os.path.abspath(TREE_FILE_PARS)
@@ -290,14 +291,15 @@ def run_analysis(n_clicks, contents, filename):
                 show_plot=False
             )
 
+            # Now return a container that places each H5 immediately above its own image:
             return html.Div(
                 [
+                    # 1) Status paragraph
                     html.P(f"✅ Parsed {num_seqs} sequence(s). {align_message}"),
 
+                    # 2) “What’s the difference?” explanation block (unchanged)
                     html.Div(
                         [
-                            html.H5("Parsimony Tree"),
-                            html.H5("ML‐style Tree", style={"marginTop": "20px"}),
                             html.Div(
                                 [
                                     html.P(
@@ -323,19 +325,34 @@ def run_analysis(n_clicks, contents, filename):
                         ]
                     ),
 
-                    html.Img(
-                        src="/output/tree_images/parsimony_tree.png",
-                        style={"maxWidth": "100%", "marginTop": "20px"}
+                    # 3) Parsimony Tree section (label + image)
+                    html.Div(
+                        [
+                            html.H5("Parsimony Tree", style={"marginTop": "20px"}),
+                            html.Img(
+                                src="/output/tree_images/parsimony_tree.png",
+                                style={"maxWidth": "100%", "marginTop": "10px"}
+                            )
+                        ]
                     ),
-                    html.Img(
-                        src="/output/tree_images/ml_tree.png",
-                        style={"maxWidth": "100%", "marginTop": "20px"}
+
+                    # 4) ML‐style Tree section (label + image)
+                    html.Div(
+                        [
+                            html.H5("ML‐style Tree", style={"marginTop": "20px"}),
+                            html.Img(
+                                src="/output/tree_images/ml_tree.png",
+                                style={"maxWidth": "100%", "marginTop": "10px"}
+                            )
+                        ]
                     )
                 ]
             )
 
         except Exception as e:
             return f"❌ Error: {str(e)}"
+
+    # If the user hasn’t uploaded a file yet:
     return "⚠️ No file uploaded."
 
 
