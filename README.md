@@ -1,67 +1,43 @@
-# 🌿 Evolutionary Tree Analyzer  
+# 🌿 SimplePhylo  
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
 ---
 
-## 🔍 Overview  
-The Evolutionary Tree Analyzer is a Python-based web app and notebook toolkit designed for **educators, students, and researchers** in bioinformatics and evolutionary biology.
-
-It parses DNA sequences in **FASTA format**, aligns them using **MUSCLE**, and constructs **phylogenetic trees** using both **parsimony** and **maximum likelihood–style** methods. Tree outputs are visualized and exported as `.png` images for teaching, presentations, or research use.
-
----
-
-## 🎯 Features  
-- ✅ Upload and validate DNA FASTA files  
-- ✅ Align sequences using **MUSCLE v3.8.31**  
-- ✅ Generate phylogenetic trees via:
-  - **Parsimony** (UPGMA clustering)
-  - **ML-style** (distance-based using identity matrix)  
-- ✅ Visualize trees with **Biopython’s Phylo module**  
-- ✅ Export `.png` images automatically  
-- ✅ Modular, classroom-friendly Python structure  
-- ✅ Built for scalability in teaching and student exploration  
+## 📋 Table of Contents
+1. [Overview](#overview)  
+2. [🚀 Quick Start](#quick-start)  
+3. [📁 Project Structure](#project-structure)  
+4. [📦 Dependencies](#dependencies)  
+5. [⚙️ MUSCLE Alignment Notes](#muscle-alignment-notes)  
+6. [🧪 Example Workflow](#example-workflow)  
+7. [🎓 Ideal For](#ideal-for)  
+8. [📅 Future Plans](#future-plans)  
+9. [🧰 Maintainer](#maintainer)  
+10. [📄 License](#license)  
+11. [📜 Citations & Attributions](#citations--attributions)
 
 ---
 
-## 📁 Project Structure
+## 🧐 Overview  
+**SimplePhylo** is a Python-based web app (built with Dash) and a companion Jupyter notebook toolkit for educators, students, and researchers in bioinformatics and evolutionary biology.
 
+It enables you to:
+- Parse DNA sequences in **FASTA** format.  
+- Align them using **MUSCLE v3.8.31**.  
+- Build phylogenetic trees via both **Parsimony** (UPGMA) and **ML-style** (distance-based on identity).  
+- Visualize and export tree images as `.png` for teaching slides, lab reports, or research.  
 
-```
-evolutionary-tree-analyzer/
-│
-├── assets/ # Logo and static UI assets
-├── data/ # Input FASTA files
-│ ├── example_sequences.fasta
-│ └── example_large.fa
-│
-├── notebooks/ # Jupyter notebook version
-│ └── tree_builder.ipynb
-│
-├── output/ # Alignment files and rendered tree images
-│ └── tree_images/
-│
-├── src/ # Core Python logic
-│ ├── fasta_parser.py
-│ ├── align_sequences.py
-│ ├── build_tree.py
-│ └── visualize_tree.py
-│
-├── app.py # Dash web app interface
-├── align_manual.bat # Batch file for manual MUSCLE alignment (Windows)
-├── requirements.txt # Python dependencies
-├── LICENSE # MIT License
-└── README.md # You are here!
-```
+Whether you’re running a quick classroom demo or prototyping a research pipeline, SimplePhylo keeps everything modular and accessible.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### 1. Clone the repo
+### 1. Clone this repository
 ```bash
 git clone https://github.com/yourusername/evolutionary-tree-analyzer.git
 cd evolutionary-tree-analyzer
-```
+---
 
 ### 2. Install dependencies
 ```bash
@@ -91,6 +67,41 @@ python app.py
 ```
 Alternatively, you can run notebooks/tree_builder.ipynb in Jupyter Notebook.
 ---
+
+## 📁 Project Structure
+
+```
+evolutionary-tree-analyzer/
+│
+├── assets/                  # Logo and static UI assets
+│   ├── PB_logo_noback_solid.png
+│   └── PB_logo_watermark.png
+│
+├── data/                    # Input FASTA files
+│   ├── example_large.fa
+│   └── example_smaller.fa
+│
+├── notebooks/               # Jupyter notebook version
+│   └── tree_builder.ipynb
+│
+├── output/                  # Alignment files and rendered tree images
+│   └── tree_images/
+│       ├── parsimony_tree.png
+│       └── ml_tree.png
+│
+├── src/                     # Core Python logic (library modules)
+│   ├── fasta_parser.py      # Parse FASTA → SeqIO records
+│   ├── align_sequences.py   # Run MUSCLE alignment
+│   ├── build_tree.py        # Build parsimony & ML-style trees
+│   └── visualize_tree.py    # Render trees to PNG via Biopython Phylo
+│
+├── app.py                   # Dash web-app entrypoint (layout + callbacks)
+├── align_manual.bat         # Windows batch script for manual MUSCLE alignment
+├── requirements.txt         # All Python dependencies
+├── LICENSE                  # MIT License (see below)
+└── README.md                # You are here!
+
+```
 
 ## 📦 Dependencies
 
@@ -140,6 +151,7 @@ Perfect for:
 - [ ] Add support for bootstrap analysis  
 - [ ] Export PDF/HTML reports  
 - [ ] Add tree comparison metrics (e.g., RF distance)
+Want to see SimplePhylo improved? I welcome all feedback and I can't wait to hear from you!
 
 ---
 
@@ -171,3 +183,4 @@ Please cite this work if you use the alignment functionality in your research or
 ---
 
 🧬 Happy tree building!
+© 2025 Mae Warner (Pipeline Bio). All rights reserved.
