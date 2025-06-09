@@ -27,6 +27,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install your library
+        run: pip install -e .    
+
       - name: Run tests with headless Matplotlib
         env:
           MPLBACKEND: Agg
