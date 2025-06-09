@@ -30,3 +30,6 @@ def align_sequences(input_fasta, output_fasta):
         print("❌ Alignment failed.")
         print("STDOUT:\n", e.stdout)
         print("STDERR:\n", e.stderr)
+        
+# for pytest’s test_run_muscle_alignment import…
+run_muscle_alignment = align_sequences
