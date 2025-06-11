@@ -1,7 +1,7 @@
 import os, subprocess
 
 def align_sequences(input_fasta: str, output_fasta: str):
-    muscle_path = os.path.join("..", "bin", "muscle")
+    muscle_path = os.path.join("bin", "muscle")
     if not os.path.isfile(muscle_path):
         raise FileNotFoundError(f"MUSCLE binary not found at {muscle_path}")
 
