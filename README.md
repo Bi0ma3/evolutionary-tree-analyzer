@@ -82,7 +82,7 @@ evolutionary-tree-analyzer/
 |
 ├── data/                    # Example FASTA inputs
 │   ├── vertebrate_test.fa   # Small demo FASTA with vertebrate mitochondrion seqs
-│   └── example_large.fa     # Small FASTA sample for testing
+│   └── example_small.fa     # Small FASTA sample for testing
 |
 ├── notebooks/               # Jupyter workflow (tree_builder.ipynb)
 |
