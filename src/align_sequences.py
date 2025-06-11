@@ -28,5 +28,3 @@ def align_sequences(input_fasta: str, output_fasta: str):
         print("STDOUT:\n", e.stdout)
         print("STDERR:\n", e.stderr)
         
-# make pytest happy
-align_sequences = run_muscle_alignment
