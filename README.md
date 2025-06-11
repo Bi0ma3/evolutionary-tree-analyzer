@@ -1,6 +1,12 @@
 # 🌿 SimplePhylo  
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
+**Why it matters:**  
+- 🔍 **Parsimony** finds the simplest tree with the fewest evolutionary changes—lightning-fast and perfect for classroom demos or sketching out relationships in agricultural genetics.  
+- 🧮 **Maximum Likelihood** applies explicit statistical models of sequence evolution to infer the tree that best explains your data—essential for robust analyses in real-world forensics or crop-breeding studies.  
+- ⚖️ **Compare both** to gauge confidence, uncover hidden rate variation, and get a fuller picture of evolutionary history.  
+
+Whether you’re teaching high-school biology or diving into forensic DNA casework, SimplePhylo gives you the tools to explore and explain phylogenies with clarity and rigor.  
 ---
 
 ## 📋 Table of Contents
@@ -9,17 +15,16 @@
 3. [📁 Project Structure](#project-structure)  
 4. [📦 Dependencies](#dependencies)  
 5. [⚙️ MUSCLE Alignment Notes](#muscle-alignment-notes)  
-6. [🧪 Example Workflow](#example-workflow)  
-7. [🎓 Ideal For](#ideal-for)  
-8. [📅 Future Plans](#future-plans)  
-9. [🧰 Maintainer](#maintainer)  
-10. [📄 License](#license)  
-11. [📜 Citations & Attributions](#citations--attributions)
+6. [🧪 Example Workflow](#example-workflow)   
+7. [📅 Future Plans](#future-plans)  
+8. [🧰 Maintainer](#maintainer)  
+9. [📄 License](#license)  
+10. [📜 Citations & Attributions](#citations--attributions)
 
 ---
 
 ## 🧐 Overview  
-**SimplePhylo** is a Python-based web app (built with Dash) and a companion Jupyter notebook toolkit for educators, students, and researchers in bioinformatics and evolutionary biology.
+**SimplePhylo** (a.k.a. Evolutionary Tree Analyzer) is a cute, flash‑fast Python package and Dash web app for building phylogenetic trees from FASTA sequences.
 
 It enables you to:
 - Parse DNA sequences in **FASTA** format.  
@@ -33,18 +38,102 @@ Whether you’re running a quick classroom demo or prototyping a research pipeli
 
 ## 🚀 Quick Start
 
-### 1. Clone this repository
+### 1. Clone the repo  
 ```bash
-git clone https://github.com/yourusername/evolutionary-tree-analyzer.git
-cd evolutionary-tree-analyzer
----
-
-### 2. Install dependencies
-```bash
-pip install -r requirements.txt
+git clone https://github.com/YourUser/evolutionary-tree-analyzer.git  
+cd evolutionary-tree-analyzer  
 ```
 
-### ⚙️ MUSCLE Alignment Notes
+### 2. Install dependencies
+(pick one)
+```bash
+# From PyPI (stable release)
+pip install evolutionary-tree-analyzer  
+
+# From GitHub (editable/dev mode)
+pip install -r requirements.txt  
+pip install -e .
+```
+### 3. Launch the Dash App
+```bash
+python main.py
+```
+
+### 4. (Totally optional) Run the notebook
+```bash
+jupyter notebook notebooks/tree_builder.ipynb
+```
+❓ Questions? Drop me a line at biology.mae@gmail.com
+
+---
+
+## 📁 Project Structure
+
+```
+evolutionary-tree-analyzer/
+|
+├── .github/                 # CI workflows and configuration
+│   └── workflows/           # GitHub Actions for testing, packaging
+│       └── ci.yml           # Continuous integration pipeline
+|
+├── assets/                  # Pipeline Bio logos (sunflower + tree)
+|
+├── bin/                     # MUSCLE binary (v3.8.31) with +x permission
+|
+├── data/                    # Example FASTA inputs
+│   ├── vertebrate_test.fa   # Small demo FASTA with vertebrate mitochondrion seqs
+│   └── example_small.fa     # Small FASTA sample for testing
+|
+├── notebooks/               # Jupyter workflow (tree_builder.ipynb)
+|
+├── output/                  # Generated alignments and tree images
+│   └── tree_images/         # Parsimony & ML PNG outputs
+|
+├── src/                     # Core Python library modules
+│   ├── fasta_parser.py      # Parse FASTA → SeqIO records
+│   ├── align_sequences.py   # Run MUSCLE alignment
+│   ├── build_tree.py        # Build parsimony & ML-style trees
+│   └── visualize_tree.py    # Render trees to PNG via Biopython Phylo
+|
+├── tests/                   # pytest test suite for modules
+│   └── test_align_sequences.py
+│   ├── test_fasta_parser.py      
+│   ├── test_build_tree.py        
+│   └── test_visualize_tree.py    
+|
+├── handle_upload.py         # Utility for file ingestion
+├── main.py                  # Dash web-app entrypoint
+├── render.yaml              # Deployment config for Render.com
+├── requirements.txt         # Runtime dependencies
+├── setup.py                 # Packaging metadata for PyPI
+├── CHANGELOG.md             # Release notes
+├── LICENSE                  # MIT License
+└── README.md                # Project overview and usage
+
+```
+---
+
+## 📦 Dependencies
+
+**Python ≥3.8** and the following PyPI packages:
+
+- `dash` & `dash-bootstrap-components` – build the interactive web UI  
+- `biopython` – FASTA parsing, tree building & Phylo rendering  
+- `matplotlib` – save publication-quality tree images  
+- `scipy` – compute distance matrices for ML-style trees  
+- `click` – simple command-line interface (CLI)  
+
+<details>
+<summary>Standard library</summary>
+
+- `subprocess`, `os`, `pathlib` – invoke & locate external tools  
+- `importlib.util` – dynamic module loading in notebooks  
+- `logging` – configurable console output  
+</details>
+
+---
+
+## ⚙️ MUSCLE Alignment Notes
 
 This project uses [MUSCLE](https://drive5.com/muscle/downloads_v3.htm) v3.8.31 to align DNA sequences.
 
@@ -61,64 +150,12 @@ Edgar, R.C. (2004) Nucleic Acids Res 32(5):1792–1797. http://www.drive5.com/mu
 
 ✨Please cite this work if you use the alignment functionality in your research or publications.
 
-### 3. Launch the App (Web Interface)
-```bash
-python app.py 
-```
-Alternatively, you can run notebooks/tree_builder.ipynb in Jupyter Notebook.
----
+ 🧠 Tips for Large Input Files
 
-## 📁 Project Structure
-
-```
-evolutionary-tree-analyzer/
-│
-├── assets/                  # Logo and static UI assets
-│   ├── PB_logo_noback_solid.png
-│   └── PB_logo_watermark.png
-│
-├── data/                    # Input FASTA files
-│   ├── example_large.fa
-│   └── example_smaller.fa
-│
-├── notebooks/               # Jupyter notebook version
-│   └── tree_builder.ipynb
-│
-├── output/                  # Alignment files and rendered tree images
-│   └── tree_images/
-│       ├── parsimony_tree.png
-│       └── ml_tree.png
-│
-├── src/                     # Core Python logic (library modules)
-│   ├── fasta_parser.py      # Parse FASTA → SeqIO records
-│   ├── align_sequences.py   # Run MUSCLE alignment
-│   ├── build_tree.py        # Build parsimony & ML-style trees
-│   └── visualize_tree.py    # Render trees to PNG via Biopython Phylo
-│
-├── app.py                   # Dash web-app entrypoint (layout + callbacks)
-├── align_manual.bat         # Windows batch script for manual MUSCLE alignment
-├── requirements.txt         # All Python dependencies
-├── LICENSE                  # MIT License (see below)
-└── README.md                # You are here!
-
-```
-
-## 📦 Dependencies
-
-Core Python libraries used:
-- `biopython` – parsing FASTA, alignment tools
-- `matplotlib` – optional display for save images
-- `subprocess` – run external tools like MUSCLE
-- `importlib.util` – dynamic loading of modular scripts
-- `dash` + `dash-bootstrap-components` – dashboard
-- `tkinter` – for local image rendering in the notebook
-
----
-
-## 🧠 Tips for Large Input Files
-   - Use smaller test files to debug your workflow
-   - Trim sequences or split large FASTA files into smaller sets
-   - Avoid running MUSCLE v5 inside Python if memory use exceeds ~16GB
+- **Work smaller first**: debug your pipeline on 5–10 sequences before scaling up.  
+- **Split & conquer**: break multi-FASTA into chunks (`seqkit split2` or `bash` loops).  
+- **Memory guardrails**: MUSCLE can spike RAM on huge alignments—keep input FASTA under 50 MB.  
+- **Use the batch script** (`align_manual.bat` or your own shell wrapper) for > 1000 sequences.
 
 ---
 
@@ -135,15 +172,7 @@ Perfect for:
 🧪 Research prototyping
 📚 Curriculum development
 💡 Student-led investigations
-
----
-
-## 🎓 Ideal For
-- High school biology & AP Bio courses
-- Undergraduate bioinformatics/evolution units
-- Curriculum writers and lab instructors
-- Pipeline Bio resources  
-
+ 
 ---
 
 ## 🧰 Future Plans
