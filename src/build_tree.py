@@ -14,9 +14,9 @@ def build_parsimony_tree(aligned_fasta, output_newick="output/parsimony_tree.new
     calculator = DistanceCalculator("identity")  # or use "blosum62" for proteins
     distance_matrix = calculator.get_distance(alignment)
 
-    # Step 3: Construct a tree using UPGMA or NJ (approximation of parsimony)
+    # Step 3: Construct a tree using  NJ (approximation of parsimony)
     constructor = DistanceTreeConstructor()
-    tree = constructor.upgma(distance_matrix)  # or constructor.nj(distance_matrix)
+    tree = constructor.nj(distance_matrix)  
 
     # Step 4: Save the tree to file in Newick format
     Phylo.write(tree, output_newick, "newick")
