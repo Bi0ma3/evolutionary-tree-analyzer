@@ -9,8 +9,8 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/B10ma3/evolutionary-tree-analyzer",
-    packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    packages=["src"],
+    package_dir={"src": "src"},
     include_package_data=True,
     install_requires=[
         "dash",
