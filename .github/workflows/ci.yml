@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: CI
 
 on:
@@ -14,24 +15,24 @@ jobs:
         python-version: [3.11]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # 1) Grab the code
+      - uses: actions/checkout@v3
 
+      # 2) Set up the matching Python
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
+      # 3) Install everything, including src/ library in “-e” mode
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -e .        # ← makes “src” importable
 
-      - name: Install your library
-        run: pip install -e .    
-
-      - name: Run tests with headless Matplotlib
+      # 4) Run pytest with headless Matplotlib
+      - name: Run tests
         env:
           MPLBACKEND: Agg
-        run: |
-          pytest --maxfail=1 -q
+        run: pytest --maxfail=1 -q
