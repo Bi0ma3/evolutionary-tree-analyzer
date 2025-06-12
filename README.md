@@ -1,4 +1,7 @@
 # 🌿 SimplePhylo  
+[![CI](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/evolutionary-tree-analyzer.svg)](https://pypi.org/project/evolutionary-tree-analyzer/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
 **Why it matters:**  
