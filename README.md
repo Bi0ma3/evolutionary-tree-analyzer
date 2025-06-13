@@ -9,7 +9,7 @@
 - 🧮 **Maximum Likelihood** applies explicit statistical models of sequence evolution to infer the tree that best explains your data—essential for robust analyses in real-world forensics or crop-breeding studies.  
 - ⚖️ **Compare both** to gauge confidence, uncover hidden rate variation, and get a fuller picture of evolutionary history.  
 
-**Whether you’re teaching high-school biology or diving into forensic DNA casework, SimplePhylo gives you the tools to explore and explain phylogenies with clarity and rigor.  
+  Whether you’re teaching high school biology or delving into forensic DNA casework, SimplePhylo empowers you to explore and explain phylogenies with clarity and rigor.
 ---
 
 ## 📋 Table of Contents
