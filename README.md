@@ -184,6 +184,7 @@ Perfect for:
 - [ ] Add support for bootstrap analysis  
 - [ ] Export PDF/HTML reports  
 - [ ] Add tree comparison metrics (e.g., RF distance)
+      
 Want to see SimplePhylo improved? I welcome all feedback and I can't wait to hear from you!
 
 ---
