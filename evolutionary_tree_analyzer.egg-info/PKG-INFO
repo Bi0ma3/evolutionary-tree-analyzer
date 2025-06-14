@@ -1,6 +1,36 @@
+Metadata-Version: 2.4
+Name: evolutionary-tree-analyzer
+Version: 1.1.0
+Summary: Build and visualize phylogenetic trees from FASTA files using parsimony and ML-style methods.
+Home-page: https://github.com/B10ma3/evolutionary-tree-analyzer
+Author: Mae Warner
+Author-email: biology.mae@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: dash
+Requires-Dist: dash-bootstrap-components
+Requires-Dist: biopython
+Requires-Dist: matplotlib
+Requires-Dist: scipy
+Requires-Dist: click
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # 🌿 SimplePhylo  
 [![CI](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/simplephylo.svg)](https://pypi.org/project/simplephylo/)
+[![PyPI version](https://img.shields.io/pypi/v/evolutionary-tree-analyzer.svg)](https://pypi.org/project/evolutionary-tree-analyzer/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
@@ -51,7 +81,7 @@ cd evolutionary-tree-analyzer
 (pick one)
 ```bash
 # From PyPI (stable release)
-pip install simplephylo  
+pip install evolutionary-tree-analyzer  
 
 # From GitHub (editable/dev mode)
 pip install -r requirements.txt  
