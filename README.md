@@ -1,7 +1,5 @@
 # 🌿 SimplePhylo  
-[![CI](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/simplephylo.svg)](https://pypi.org/project/simplephylo/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 *A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
 
 **Why it matters:**  
@@ -10,6 +8,9 @@
 - ⚖️ **Compare both** to gauge confidence, uncover hidden rate variation, and get a fuller picture of evolutionary history.  
 
   Whether you’re teaching high school biology or delving into forensic DNA casework, SimplePhylo empowers you to explore and explain phylogenies with clarity and rigor.
+
+[![CI](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/simplephylo.svg)](https://pypi.org/project/simplephylo/)
 ---
 
 ## 📋 Table of Contents
