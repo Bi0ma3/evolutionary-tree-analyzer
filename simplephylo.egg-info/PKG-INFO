@@ -1,0 +1,248 @@
+Metadata-Version: 2.4
+Name: simplephylo
+Version: 1.1.0
+Summary: Build and visualize phylogenetic trees from FASTA files using parsimony and ML-style methods.
+Home-page: https://github.com/B10ma3/evolutionary-tree-analyzer
+Author: Mae Warner
+Author-email: biology.mae@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: dash
+Requires-Dist: dash-bootstrap-components
+Requires-Dist: biopython
+Requires-Dist: matplotlib
+Requires-Dist: scipy
+Requires-Dist: click
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# 🌿 SimplePhylo  
+[![CI](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/Bi0ma3/evolutionary-tree-analyzer/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/simplephylo.svg)](https://pypi.org/project/simplephylo/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+*A phylogenetic tree builder for DNA sequence analysis using parsimony and maximum likelihood methods.*
+
+**Why it matters:**  
+- 🔍 **Parsimony** finds the simplest tree with the fewest evolutionary changes—lightning-fast and perfect for classroom demos or sketching out relationships in agricultural genetics.  
+- 🧮 **Maximum Likelihood** applies explicit statistical models of sequence evolution to infer the tree that best explains your data—essential for robust analyses in real-world forensics or crop-breeding studies.  
+- ⚖️ **Compare both** to gauge confidence, uncover hidden rate variation, and get a fuller picture of evolutionary history.  
+
+  Whether you’re teaching high school biology or delving into forensic DNA casework, SimplePhylo empowers you to explore and explain phylogenies with clarity and rigor.
+---
+
+## 📋 Table of Contents
+1. [Overview](#overview)  
+2. [🚀 Quick Start](#quick-start)  
+3. [📁 Project Structure](#project-structure)  
+4. [📦 Dependencies](#dependencies)  
+5. [⚙️ MUSCLE Alignment Notes](#muscle-alignment-notes)  
+6. [🧪 Example Workflow](#example-workflow)   
+7. [📅 Future Plans](#future-plans)  
+8. [🧰 Maintainer](#maintainer)  
+9. [📄 License](#license)  
+10. [📜 Citations & Attributions](#citations--attributions)
+
+---
+
+## 🧐 Overview  
+**SimplePhylo** (a.k.a. Evolutionary Tree Analyzer) is a cute, flash‑fast Python package and Dash web app for building phylogenetic trees from FASTA sequences.
+
+It enables you to:
+- Parse DNA sequences in **FASTA** format.  
+- Align them using **MUSCLE v3.8.31**.  
+- Build phylogenetic trees via both **Parsimony** (UPGMA) and **ML-style** (distance-based on identity).  
+- Visualize and export tree images as `.png` for teaching slides, lab reports, or research.  
+
+Whether you’re running a quick classroom demo or prototyping a research pipeline, SimplePhylo keeps everything modular and accessible.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone the repo  
+```bash
+git clone https://github.com/YourUser/evolutionary-tree-analyzer.git  
+cd evolutionary-tree-analyzer  
+```
+
+### 2. Install dependencies
+(pick one)
+```bash
+# From PyPI (stable release)
+pip install simplephylo  
+
+# From GitHub (editable/dev mode)
+pip install -r requirements.txt  
+pip install -e .
+```
+### 3. Launch the Dash App
+```bash
+python main.py
+```
+
+### 4. (Totally optional) Run the notebook
+```bash
+jupyter notebook notebooks/tree_builder.ipynb
+```
+❓ Questions? Drop me a line at biology.mae@gmail.com
+
+---
+
+## 📁 Project Structure
+
+```
+evolutionary-tree-analyzer/
+|
+├── .github/                 # CI workflows and configuration
+│   └── workflows/           # GitHub Actions for testing, packaging
+│       └── ci.yml           # Continuous integration pipeline
+|
+├── assets/                  # Pipeline Bio logos (sunflower + tree)
+|
+├── bin/                     # MUSCLE binary (v3.8.31) with +x permission
+|
+├── data/                    # Example FASTA inputs
+│   ├── vertebrate_test.fa   # Small demo FASTA with vertebrate mitochondrion seqs
+│   └── example_small.fa     # Small FASTA sample for testing
+|
+├── notebooks/               # Jupyter workflow (tree_builder.ipynb)
+|
+├── output/                  # Generated alignments and tree images
+│   └── tree_images/         # Parsimony & ML PNG outputs
+|
+├── src/                     # Core Python library modules
+│   ├── fasta_parser.py      # Parse FASTA → SeqIO records
+│   ├── align_sequences.py   # Run MUSCLE alignment
+│   ├── build_tree.py        # Build parsimony & ML-style trees
+│   └── visualize_tree.py    # Render trees to PNG via Biopython Phylo
+|
+├── tests/                   # pytest test suite for modules
+│   └── test_align_sequences.py
+│   ├── test_fasta_parser.py      
+│   ├── test_build_tree.py        
+│   └── test_visualize_tree.py    
+|
+├── handle_upload.py         # Utility for file ingestion
+├── main.py                  # Dash web-app entrypoint
+├── render.yaml              # Deployment config for Render.com
+├── requirements.txt         # Runtime dependencies
+├── setup.py                 # Packaging metadata for PyPI
+├── CHANGELOG.md             # Release notes
+├── LICENSE                  # MIT License
+└── README.md                # Project overview and usage
+
+```
+---
+
+## 📦 Dependencies
+
+**Python ≥3.8** and the following PyPI packages:
+
+- `dash` & `dash-bootstrap-components` – build the interactive web UI  
+- `biopython` – FASTA parsing, tree building & Phylo rendering  
+- `matplotlib` – save publication-quality tree images  
+- `scipy` – compute distance matrices for ML-style trees  
+- `click` – simple command-line interface (CLI)  
+
+<details>
+<summary>Standard library</summary>
+
+- `subprocess`, `os`, `pathlib` – invoke & locate external tools  
+- `importlib.util` – dynamic module loading in notebooks  
+- `logging` – configurable console output  
+</details>
+
+---
+
+## ⚙️ MUSCLE Alignment Notes
+
+This project uses [MUSCLE](https://drive5.com/muscle/downloads_v3.htm) v3.8.31 to align DNA sequences.
+
+- For small files, alignment runs automatically in Python
+- For large files, use the batch script: align_manual.bat
+
+#### You must have `MUSCLE` installed and accessible from your system's PATH for alignment.
+💡 Ensure the muscle.exe binary is placed in:
+C:\Program Files\muscle\muscle.exe
+Or edit the .bat file to reflect the correct path.
+
+MUSCLE citation:
+Edgar, R.C. (2004) Nucleic Acids Res 32(5):1792–1797. http://www.drive5.com/muscle
+
+✨Please cite this work if you use the alignment functionality in your research or publications.
+
+ 🧠 Tips for Large Input Files
+
+- **Work smaller first**: debug your pipeline on 5–10 sequences before scaling up.  
+- **Split & conquer**: break multi-FASTA into chunks (`seqkit split2` or `bash` loops).  
+- **Memory guardrails**: MUSCLE can spike RAM on huge alignments—keep input FASTA under 50 MB.  
+- **Use the batch script** (`align_manual.bat` or your own shell wrapper) for > 1000 sequences.
+
+---
+
+## 🧪 Example Workflow
+1. Drop your .fasta file into the data/ folder
+2. Launch the app or notebook
+3. You’ll get:
+  - A multiple sequence alignment (FASTA)
+  - Two phylogenetic trees (Parsimony & ML-style)
+  - PNG files saved in output/tree_images/
+
+Perfect for:
+🧬 Biology class demonstrations
+🧪 Research prototyping
+📚 Curriculum development
+💡 Student-led investigations
+ 
+---
+
+## 🧰 Future Plans
+  
+- [ ] Add support for bootstrap analysis  
+- [ ] Export PDF/HTML reports  
+- [ ] Add tree comparison metrics (e.g., RF distance)
+Want to see SimplePhylo improved? I welcome all feedback and I can't wait to hear from you!
+
+---
+
+## 👩‍💻 Maintainer
+
+**Pipeline Bio** – Simple Bioinformatics for Educators  
+🌻 Sunflower logo with a phylogenetic tree  
+📫 Contact: biology.mae@gmail.com  
+🛒 [Teachers Pay Teachers Store: Pipeline Bio](https://www.teacherspayteachers.com/store/pipeline-bio)  
+📌 #teacherspayteachers  
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+## 🧾 Citations & Attributions
+
+This project uses the MUSCLE alignment tool developed by Robert C. Edgar.
+
+> Edgar, R.C. (2004) MUSCLE: multiple sequence alignment with high accuracy and high throughput. *Nucleic Acids Research*, 32(5):1792–1797.  
+> [http://www.drive5.com/muscle](http://www.drive5.com/muscle)
+
+Please cite this work if you use the alignment functionality in your research or publications.
+
+---
+
+🧬 Happy tree building!
+© 2025 Mae Warner (Pipeline Bio). All rights reserved.
